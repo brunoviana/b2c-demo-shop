@@ -240,6 +240,7 @@
         "spryker-sdk/benchmark": "^0.2.2",
         "spryker-sdk/composer-constrainer": "^0.2.6",
         "spryker-sdk/phpstan-spryker": "^0.4.0",
+        "spryker-sdk/spryk": "^0.6.0",
         "spryker/architecture-sniffer": "^0.5.5",
         "spryker/code-sniffer": "^0.17.18",
         "spryker/docker-chromedriver": "dev-master",
@@ -254,13 +255,14 @@
             "Generated\\": "src/Generated/",
             "Orm\\": "src/Orm/",
             "Pyz\\": "src/Pyz/",
+            "BrunoViana\\": "src/BrunoViana/",
             "Install\\": "src/Install/",
             "SprykerConfig\\": "src/SprykerConfig/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "PyzTest\\": "tests/PyzTest/",
+            "BrunoVianaTest\\": "tests/BrunoVianaTest/",
             "PhpStan\\": "tests/PhpStan/",
             "Acceptance\\Auth\\": "vendor/spryker/auth/tests/",
             "Application\\Module\\": "vendor/spryker/application/tests/_support/Module/",
@@ -311,6 +313,10 @@
         ],
         "phpstan": [
             "php -d memory_limit=1024M vendor/bin/phpstan analyze -c phpstan.neon src/ -l 6"
+        ],
+        "tasks:tests": [
+            "vendor/bin/codecept build -c codeception.brunoviana.yml",
+            "vendor/bin/codecept run -c codeception.brunoviana.yml"
         ],
         "phpstan-setup": "vendor/bin/console dev:ide-auto-completion:generate",
         "prefer-mid": [
