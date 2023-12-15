@@ -102,6 +102,7 @@ class TasksFacadeTest extends Unit
 
         // Assert
         $this->tester->assertDeleteTaskResponseIsCorrect($deleteTaskResponse, $taskTransfer);
+        $this->tester->assertDeleteTaskRemovedTask($taskTransfer);
     }
 
     public function testGetTaskByIdReturnsTaskSuccessfully(): void

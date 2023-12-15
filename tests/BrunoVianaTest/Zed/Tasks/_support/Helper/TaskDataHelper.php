@@ -38,7 +38,6 @@ class TaskDataHelper extends Module
 
     protected function cleanupTask(TaskTransfer $taskTransfer): void
     {
-        // @TODO uncomment
-//        $this->getTaskFacade()->removeTask($taskTransfer->getIdUser());
+        $this->getTaskFacade()->deleteTask($taskTransfer);
     }
 }

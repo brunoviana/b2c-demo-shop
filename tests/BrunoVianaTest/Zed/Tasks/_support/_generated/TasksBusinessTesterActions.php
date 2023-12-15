@@ -1,4 +1,4 @@
-<?php  //[STAMP] e0c822d9df44e7cb2aee68e0d79ca93e
+<?php  //[STAMP] 639d819f3f085a45c0bff3f51b39b59d
 // phpcs:ignoreFile
 namespace BrunoVianaTest\Zed\Tasks\_generated;
 
@@ -316,6 +316,17 @@ trait TasksBusinessTesterActions
      */
     public function assertDeleteTaskResponseIsCorrect(\Generated\Shared\Transfer\TaskResponseTransfer $taskResponseTransfer, \Generated\Shared\Transfer\TaskTransfer $originalTaskTransfer): void {
         $this->getScenario()->runStep(new \Codeception\Step\Action('assertDeleteTaskResponseIsCorrect', func_get_args()));
+    }
+
+ 
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     *
+     * @see \BrunoVianaTest\Zed\Tasks\Helper\TasksBusinessAssertionHelper::assertDeleteTaskRemovedTask()
+     */
+    public function assertDeleteTaskRemovedTask(\Generated\Shared\Transfer\TaskTransfer $originalTaskTransfer) {
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('assertDeleteTaskRemovedTask', func_get_args()));
     }
 
  
