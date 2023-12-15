@@ -50,4 +50,14 @@ class TasksEntityManager extends AbstractEntityManager implements TasksEntityMan
 
         return $taskMapper->mapTaskEntityToTaskTransfer($taskEntity, new TaskTransfer());
     }
+
+    public function deleteTask(TaskTransfer $taskTransfer): void
+    {
+        $taskTransfer->requireIdTask();
+
+        $this->getFactory()
+            ->createTaskQuery()
+            ->filterByIdTask($taskTransfer->getIdTask())
+            ->delete();
+    }
 }

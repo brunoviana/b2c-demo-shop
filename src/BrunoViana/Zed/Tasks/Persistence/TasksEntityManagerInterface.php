@@ -10,4 +10,6 @@ interface TasksEntityManagerInterface
     public function createTask(TaskTransfer $taskTransfer): TaskTransfer;
 
     public function updateTask(TaskTransfer $taskTransfer): ?TaskTransfer;
+
+    public function deleteTask(TaskTransfer $taskTransfer): void;
 }

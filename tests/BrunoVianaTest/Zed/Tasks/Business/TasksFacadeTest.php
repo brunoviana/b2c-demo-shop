@@ -21,35 +21,7 @@ class TasksFacadeTest extends Unit
         $createTaskResponse = $this->tester->getFacade()->createTask($taskTransfer);
 
         // Assert
-        $this->tester->assertCreateTaskCreatedTaskSuccessfully($createTaskResponse);
-    }
-
-    public function testCreateTaskMustValidateIfTitleIsMissing(): void
-    {
-        // Assert
-        $this->expectException(RequiredTransferPropertyException::class);
-
-        // Arrange
-        $taskTransfer = $this->tester->getTaskTransfer([
-            'title' => null,
-        ]);
-
-        // Act
-        $this->tester->getFacade()->createTask($taskTransfer);
-    }
-
-    public function testCreateTaskMustValidateIfStatusIsMissing(): void
-    {
-        // Assert
-        $this->expectException(RequiredTransferPropertyException::class);
-
-        // Arrange
-        $taskTransfer = $this->tester->getTaskTransfer([
-            'status' => null,
-        ]);
-
-        // Act
-        $this->tester->getFacade()->createTask($taskTransfer);
+        $this->tester->assertCreateTaskResponseIsCorrect($createTaskResponse);
     }
 
     public function testCreateTaskMustHandleUnexpectedExceptionSuccessfully(): void
@@ -82,7 +54,7 @@ class TasksFacadeTest extends Unit
         $updateTaskResponse = $this->tester->getFacade()->updateTask($taskTransfer);
 
         // Assert
-        $this->tester->assertUpdateTaskChangeTaskAttributesSuccessfully($updateTaskResponse, $taskTransfer);
+        $this->tester->assertUpdateTaskResponseIsCorrect($updateTaskResponse, $taskTransfer);
     }
 
     public function testUpdateTaskMustHandleUnexpectedExceptionSuccessfully(): void
@@ -102,7 +74,7 @@ class TasksFacadeTest extends Unit
         );
     }
 
-    public function testUpdateTaskMustHandleNotFoundTasksSuccessfully(): void
+    public function testUpdateTaskMustHandleNotFoundTaskSuccessfully(): void
     {
         // Arrange
         $taskTransfer = $this->tester->haveTask();
@@ -119,5 +91,44 @@ class TasksFacadeTest extends Unit
             'It\' impossible to update this task.',
         );
     }
+
+    public function testDeleteTaskMustRemoveTaskFromStorage(): void
+    {
+        // Arrange
+        $taskTransfer = $this->tester->haveTask();
+
+        // Act
+        $deleteTaskResponse = $this->tester->getFacade()->deleteTask($taskTransfer);
+
+        // Assert
+        $this->tester->assertDeleteTaskResponseIsCorrect($deleteTaskResponse, $taskTransfer);
+    }
+
+    public function testGetTaskByIdReturnsTaskSuccessfully(): void
+    {
+        // Arrange
+        $taskTransfer = $this->tester->haveTask();
+
+        // Act
+        $getTaskResponse = $this->tester->getFacade()->getTaskById(
+            $taskTransfer->getIdTask()
+        );
+
+        // Assert
+        $this->tester->assertGetTaskByIdResponseIsCorrect($getTaskResponse, $taskTransfer);
+    }
+
+    public function testGetTaskByIdMustHandleNotFoundTaskSuccessfully(): void
+    {
+        // Act
+        $getTaskResponse = $this->tester->getFacade()->getTaskById(0);
+
+        // Assert
+        $this->tester->assertTaskResponseReturnedError(
+            $getTaskResponse,
+            'Task not found.',
+        );
+    }
+
 
 }

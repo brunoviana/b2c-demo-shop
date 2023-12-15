@@ -1,4 +1,4 @@
-<?php  //[STAMP] bb56d72a8a9574408af09e18032343bc
+<?php  //[STAMP] e0c822d9df44e7cb2aee68e0d79ca93e
 // phpcs:ignoreFile
 namespace BrunoVianaTest\Zed\Tasks\_generated;
 
@@ -279,10 +279,10 @@ trait TasksBusinessTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see \BrunoVianaTest\Zed\Tasks\Helper\TasksBusinessAssertionHelper::assertCreateTaskCreatedTaskSuccessfully()
+     * @see \BrunoVianaTest\Zed\Tasks\Helper\TasksBusinessAssertionHelper::assertCreateTaskResponseIsCorrect()
      */
-    public function assertCreateTaskCreatedTaskSuccessfully(\Generated\Shared\Transfer\TaskResponseTransfer $taskResponseTransfer): void {
-        $this->getScenario()->runStep(new \Codeception\Step\Action('assertCreateTaskCreatedTaskSuccessfully', func_get_args()));
+    public function assertCreateTaskResponseIsCorrect(\Generated\Shared\Transfer\TaskResponseTransfer $taskResponseTransfer): void {
+        $this->getScenario()->runStep(new \Codeception\Step\Action('assertCreateTaskResponseIsCorrect', func_get_args()));
     }
 
  
@@ -301,10 +301,32 @@ trait TasksBusinessTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see \BrunoVianaTest\Zed\Tasks\Helper\TasksBusinessAssertionHelper::assertUpdateTaskChangeTaskAttributesSuccessfully()
+     * @see \BrunoVianaTest\Zed\Tasks\Helper\TasksBusinessAssertionHelper::assertUpdateTaskResponseIsCorrect()
      */
-    public function assertUpdateTaskChangeTaskAttributesSuccessfully(\Generated\Shared\Transfer\TaskResponseTransfer $taskResponseTransfer, \Generated\Shared\Transfer\TaskTransfer $originalTaskTransfer): void {
-        $this->getScenario()->runStep(new \Codeception\Step\Action('assertUpdateTaskChangeTaskAttributesSuccessfully', func_get_args()));
+    public function assertUpdateTaskResponseIsCorrect(\Generated\Shared\Transfer\TaskResponseTransfer $taskResponseTransfer, \Generated\Shared\Transfer\TaskTransfer $originalTaskTransfer): void {
+        $this->getScenario()->runStep(new \Codeception\Step\Action('assertUpdateTaskResponseIsCorrect', func_get_args()));
+    }
+
+ 
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     *
+     * @see \BrunoVianaTest\Zed\Tasks\Helper\TasksBusinessAssertionHelper::assertDeleteTaskResponseIsCorrect()
+     */
+    public function assertDeleteTaskResponseIsCorrect(\Generated\Shared\Transfer\TaskResponseTransfer $taskResponseTransfer, \Generated\Shared\Transfer\TaskTransfer $originalTaskTransfer): void {
+        $this->getScenario()->runStep(new \Codeception\Step\Action('assertDeleteTaskResponseIsCorrect', func_get_args()));
+    }
+
+ 
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     *
+     * @see \BrunoVianaTest\Zed\Tasks\Helper\TasksBusinessAssertionHelper::assertGetTaskByIdResponseIsCorrect()
+     */
+    public function assertGetTaskByIdResponseIsCorrect(\Generated\Shared\Transfer\TaskResponseTransfer $taskResponseTransfer): void {
+        $this->getScenario()->runStep(new \Codeception\Step\Action('assertGetTaskByIdResponseIsCorrect', func_get_args()));
     }
 
  

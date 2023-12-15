@@ -60,4 +60,12 @@ class TaskWriter implements TaskWriterInterface
                 );
         }
     }
+
+    public function deleteTask(TaskTransfer $taskTransfer): TaskResponseTransfer
+    {
+        $this->entityManager->deleteTask($taskTransfer);
+
+        return (new TaskResponseTransfer())->setIsSuccessful(true);
+    }
+
 }

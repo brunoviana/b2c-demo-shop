@@ -10,4 +10,6 @@ interface TaskWriterInterface
     public function createTask(TaskTransfer $taskTransfer): TaskResponseTransfer;
 
     public function updateTask(TaskTransfer $taskTransfer): TaskResponseTransfer;
+
+    public function deleteTask(TaskTransfer $taskTransfer): TaskResponseTransfer;
 }
