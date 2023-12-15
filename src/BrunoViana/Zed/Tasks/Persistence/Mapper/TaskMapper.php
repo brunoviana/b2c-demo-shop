@@ -3,17 +3,17 @@
 namespace BrunoViana\Zed\Tasks\Persistence\Mapper;
 
 use Generated\Shared\Transfer\TaskTransfer;
-use Orm\Zed\Tasks\Persistence\BrunovianaTask;
+use Orm\Zed\Tasks\Persistence\BvTask;
 
 class TaskMapper
 {
-    public function mapTaskTransferToTaskEntity(TaskTransfer $taskTransfer, BrunovianaTask $BrunovianaTask): BrunovianaTask
+    public function mapTaskTransferToTaskEntity(TaskTransfer $taskTransfer, BvTask $BvTask): BvTask
     {
-        return $BrunovianaTask->fromArray($taskTransfer->toArray());
+        return $BvTask->fromArray($taskTransfer->toArray());
     }
 
-    public function mapTaskEntityToTaskTransfer(BrunovianaTask $BrunovianaTask, TaskTransfer $taskTransfer): TaskTransfer
+    public function mapTaskEntityToTaskTransfer(BvTask $BvTask, TaskTransfer $taskTransfer): TaskTransfer
     {
-        return $taskTransfer->fromArray($BrunovianaTask->toArray(), true);
+        return $taskTransfer->fromArray($BvTask->toArray(), true);
     }
 }

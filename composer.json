@@ -314,13 +314,13 @@
         "phpstan": [
             "php -d memory_limit=1024M vendor/bin/phpstan analyze -c phpstan.neon src/ -l 6"
         ],
-        "tasks:tests": [
-            "vendor/bin/codecept build -c codeception.brunoviana.yml",
-            "vendor/bin/codecept run -c codeception.brunoviana.yml"
-        ],
         "phpstan-setup": "vendor/bin/console dev:ide-auto-completion:generate",
         "prefer-mid": [
             "COMPOSER_MEMORY_LIMIT=-1 composer require twig/twig:\"^2.9.0\""
+        ],
+        "bv:tests:all": [
+            "vendor/bin/codecept build -c codeception.brunoviana.yml",
+            "vendor/bin/codecept run -c codeception.brunoviana.yml"
         ]
     }
 }

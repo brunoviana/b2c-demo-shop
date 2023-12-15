@@ -4,7 +4,7 @@ namespace BrunoViana\Zed\Tasks\Persistence;
 
 use Generated\Shared\Transfer\StoreTransfer;
 use Generated\Shared\Transfer\TaskTransfer;
-use Orm\Zed\Tasks\Persistence\BrunovianaTask;
+use Orm\Zed\Tasks\Persistence\BvTask;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
 
 /**
@@ -18,7 +18,7 @@ class TasksEntityManager extends AbstractEntityManager implements TasksEntityMan
 
         $taskEntity = $taskMapper->mapTaskTransferToTaskEntity(
             $taskTransfer,
-            new BrunovianaTask()
+            new BvTask()
         );
 
         $taskEntity->save();
