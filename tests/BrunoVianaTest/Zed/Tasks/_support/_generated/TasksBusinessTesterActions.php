@@ -1,4 +1,4 @@
-<?php  //[STAMP] 639d819f3f085a45c0bff3f51b39b59d
+<?php  //[STAMP] 8bb5f1408773305a0ae821a3a855dbd1
 // phpcs:ignoreFile
 namespace BrunoVianaTest\Zed\Tasks\_generated;
 
@@ -278,6 +278,18 @@ trait TasksBusinessTesterActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
+     * @param string[] $override
+     * @return TaskTransfer
+     * @see \BrunoVianaTest\Shared\Tasks\Helper\TaskDataHelper::haveTask()
+     */
+    public function haveTask(array $override = []): \Generated\Shared\Transfer\TaskTransfer {
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('haveTask', func_get_args()));
+    }
+
+ 
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
      *
      * @see \BrunoVianaTest\Zed\Tasks\Helper\TasksBusinessAssertionHelper::assertCreateTaskResponseIsCorrect()
      */
@@ -338,17 +350,5 @@ trait TasksBusinessTesterActions
      */
     public function assertGetTaskByIdResponseIsCorrect(\Generated\Shared\Transfer\TaskResponseTransfer $taskResponseTransfer): void {
         $this->getScenario()->runStep(new \Codeception\Step\Action('assertGetTaskByIdResponseIsCorrect', func_get_args()));
-    }
-
- 
-    /**
-     * [!] Method is generated. Documentation taken from corresponding module.
-     *
-     * @param string[] $override
-     * @return TaskTransfer
-     * @see \BrunoVianaTest\Zed\Tasks\Helper\TaskDataHelper::haveTask()
-     */
-    public function haveTask(array $override = []): \Generated\Shared\Transfer\TaskTransfer {
-        return $this->getScenario()->runStep(new \Codeception\Step\Action('haveTask', func_get_args()));
     }
 }

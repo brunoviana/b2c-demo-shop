@@ -11,4 +11,10 @@ interface TasksBackendApiAttributesMapperInterface
         TaskTransfer $taskTransfer,
         TasksBackendApiAttributesTransfer $taskBackendApiAttributeTransfer,
     ): TasksBackendApiAttributesTransfer;
+
+    public function mapTasksBackendApiAttributesToTaskTransfer(
+        TasksBackendApiAttributesTransfer $taskBackendApiAttributeTransfer,
+        TaskTransfer $taskTransfer,
+        bool $notUpdateNullValues = false,
+    ): TaskTransfer;
 }

@@ -43,7 +43,7 @@ class TaskWriter implements TaskWriterInterface
                 return (new TaskResponseTransfer())->setIsSuccessful(false)
                     ->addError(
                         (new TaskErrorTransfer())->setMessage(
-                            'It\' impossible to update this task.',
+                            'It\'s impossible to update this task.',
                         )
                     );
             }

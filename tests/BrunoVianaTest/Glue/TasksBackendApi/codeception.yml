@@ -1,4 +1,4 @@
-namespace: BrunoVianaTest\Zed\Tasks
+namespace: BrunoVianaTest\Glue\TasksBackendApi
 paths:
     tests: .
     data: ../../../_data
@@ -11,20 +11,20 @@ coverage:
         include:
             - '../../../../src/*'
 suites:
-    Business:
-        path: Business
-        actor: TasksBusinessTester
+    Communication:
+        path: .
+        actor: TasksBackendApiTester
         modules:
             enabled:
-#                - Asserts
+                - Asserts
                 - \SprykerTest\Shared\Testify\Helper\Environment
                 - \SprykerTest\Shared\Testify\Helper\ConfigHelper
                 - \SprykerTest\Shared\Testify\Helper\LocatorHelper:
                         projectNamespaces: [ 'BrunoViana' ]
+                - \SprykerTest\Shared\Propel\Helper\TransactionHelper
                 - \SprykerTest\Shared\Testify\Helper\DependencyHelper
                 - \SprykerTest\Shared\Testify\Helper\DataCleanupHelper
                 - \SprykerTest\Zed\Testify\Helper\Business\BusinessHelper
-                - \SprykerTest\Shared\Propel\Helper\TransactionHelper
 #                - \SprykerTest\Shared\Store\Helper\StoreReferenceHelper
 #                - \SprykerTest\Shared\Store\Helper\StoreDataHelper
 #                - \SprykerTest\Shared\TaxApp\Helper\TaxAppDataHelper
@@ -38,6 +38,6 @@ suites:
 #                - \SprykerTest\Zed\TaxApp\Helper\TaxAppBusinessAssertionHelper
 #                - \SprykerTest\Zed\Merchant\Helper\MerchantHelper
 #                - \SprykerTest\Zed\MerchantProfile\Helper\MerchantProfileHelper
-#                - \SprykerTest\Shared\Store\Helper\StoreDependencyHelper
+##                - \SprykerTest\Shared\Store\Helper\StoreDependencyHelper
+#                - \BrunoVianaTest\Zed\Tasks\Helper\TasksBusinessAssertionHelper
                 - \BrunoVianaTest\Shared\Tasks\Helper\TaskDataHelper
-                - \BrunoVianaTest\Zed\Tasks\Helper\TasksBusinessAssertionHelper

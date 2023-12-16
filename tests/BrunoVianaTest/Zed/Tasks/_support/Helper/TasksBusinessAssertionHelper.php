@@ -8,6 +8,7 @@ use Generated\Shared\Transfer\TaskResponseTransfer;
 use Generated\Shared\Transfer\TaskTransfer;
 use SprykerTest\Shared\Testify\Helper\LocatorHelperTrait;
 
+// @TODO remove this
 class TasksBusinessAssertionHelper extends Module
 {
     use LocatorHelperTrait;

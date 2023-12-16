@@ -13,4 +13,21 @@ class TasksBackendApiAttributesMapper implements TasksBackendApiAttributesMapper
     ): TasksBackendApiAttributesTransfer {
         return $taskBackendApiAttributeTransfer->fromArray($taskTransfer->toArray());
     }
+
+    public function mapTasksBackendApiAttributesToTaskTransfer(
+        TasksBackendApiAttributesTransfer $taskBackendApiAttributeTransfer,
+        TaskTransfer $taskTransfer,
+        bool $notUpdateNullValues = false,
+    ): TaskTransfer {
+        if ($notUpdateNullValues === false) {
+            return $taskTransfer->fromArray($taskBackendApiAttributeTransfer->toArray());
+        }
+
+        return $taskTransfer->fromArray(
+            array_filter($taskBackendApiAttributeTransfer->toArray(), function($value){
+                return $value !== null;
+            }),
+            true
+        );
+    }
 }

@@ -256,6 +256,7 @@
             "Orm\\": "src/Orm/",
             "Pyz\\": "src/Pyz/",
             "BrunoViana\\": "src/BrunoViana/",
+            "BrunoVianaTest\\Shared\\Tasks\\Helper\\": "tests/BrunoVianaTest/Shared/Tasks/_support/Helper/",
             "Install\\": "src/Install/",
             "SprykerConfig\\": "src/SprykerConfig/"
         }

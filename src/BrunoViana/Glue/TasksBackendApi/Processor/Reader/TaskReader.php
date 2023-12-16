@@ -7,7 +7,7 @@ use BrunoViana\Glue\TasksBackendApi\Mapper\GlueResponseTaskMapperInterface;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 
-class TasksReader implements TasksReaderInterface
+class TaskReader implements TaskReaderInterface
 {
     public function __construct(
         protected TaskBackendApiToTasksFacadeInterface $tasksFacade,
@@ -26,20 +26,4 @@ class TasksReader implements TasksReaderInterface
             $glueRequestTransfer
         );
     }
-
-//    public function getTest(RestRequestInterface $restRequest): RestResponseInterface
-//    {
-//        $transfer = new RestTasksAttributesTransfer();
-//        $transfer->setName('Teste');
-//
-//        $restResource = $this->restResourceBuilder->createRestResource(
-//            TasksBackendApiConfig::RESOURCE_TASKS,
-//            null,
-//            $transfer,
-//        );
-//
-//        return $this->restResourceBuilder
-//            ->createRestResponse()
-//            ->addResource($restResource);
-//    }
 }

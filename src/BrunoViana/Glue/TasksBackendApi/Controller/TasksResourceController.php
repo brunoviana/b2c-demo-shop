@@ -9,6 +9,7 @@ namespace BrunoViana\Glue\TasksBackendApi\Controller;
 
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
+use Generated\Shared\Transfer\TasksBackendApiAttributesTransfer;
 use Spryker\Glue\Kernel\Backend\Controller\AbstractController;
 
 
@@ -17,10 +18,39 @@ use Spryker\Glue\Kernel\Backend\Controller\AbstractController;
  */
 class TasksResourceController  extends AbstractController //extends AbstractBackendApiController
 {
+
+    // request collection
+
     public function getAction(GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
     {
         return $this->getFactory()->createTaskReader()->getTaskById($glueRequestTransfer);
     }
 
-    // request collection
+    public function postAction(
+        TasksBackendApiAttributesTransfer $taskBackendApiAttributesTransfer,
+        GlueRequestTransfer $glueRequestTransfer,
+    ): GlueResponseTransfer {
+        return $this->getFactory()->createTaskWriter()->createTask(
+            $taskBackendApiAttributesTransfer,
+            $glueRequestTransfer
+        );
+    }
+
+    public function patchAction(
+        TasksBackendApiAttributesTransfer $taskBackendApiAttributesTransfer,
+        GlueRequestTransfer $glueRequestTransfer,
+    ): GlueResponseTransfer {
+        return $this->getFactory()->createTaskWriter()->updateTask(
+            $taskBackendApiAttributesTransfer,
+            $glueRequestTransfer
+        );
+    }
+
+    public function deleteAction(
+        GlueRequestTransfer $glueRequestTransfer,
+    ): GlueResponseTransfer {
+        return $this->getFactory()->createTaskWriter()->deleteTask(
+            $glueRequestTransfer
+        );
+    }
 }

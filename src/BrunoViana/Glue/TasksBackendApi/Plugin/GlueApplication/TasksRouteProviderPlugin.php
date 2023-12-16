@@ -40,14 +40,47 @@ class TasksRouteProviderPlugin extends AbstractPlugin implements RouteProviderPl
     {
         // @TODO move to own class
 
-        $route = new Route('tasks/{id}');
+        $route = new Route('/tasks/{id}');
         $route->setDefault('_controller', [TasksResourceController::class, 'getAction'])
-            ->setDefault('_method', static::METHOD_GET)
+            ->setDefault('_method', 'GET')
             ->setDefault(static::STRATEGIES_AUTHORIZATION, [static::STRATEGY_AUTHORIZATION_API_KEY])
             ->setMethods('GET');
 
         $routeCollection->add(
-            'tasks-endpoint',
+            'tasks-endpoint-get',
+            $route,
+        );
+
+        $route = new Route('/tasks');
+        $route->setDefault('_controller', [TasksResourceController::class, 'postAction'])
+            ->setDefault('_method', 'POST')
+            ->setDefault(static::STRATEGIES_AUTHORIZATION, [static::STRATEGY_AUTHORIZATION_API_KEY])
+            ->setMethods('POST');
+
+        $routeCollection->add(
+            'tasks-endpoint-post',
+            $route,
+        );
+
+        $route = new Route('/tasks/{id}');
+        $route->setDefault('_controller', [TasksResourceController::class, 'patchAction'])
+            ->setDefault('_method', 'PATCH')
+            ->setDefault(static::STRATEGIES_AUTHORIZATION, [static::STRATEGY_AUTHORIZATION_API_KEY])
+            ->setMethods('PATCH');
+
+        $routeCollection->add(
+            'tasks-endpoint-patch',
+            $route,
+        );
+
+        $route = new Route('/tasks/{id}');
+        $route->setDefault('_controller', [TasksResourceController::class, 'deleteAction'])
+            ->setDefault('_method', 'DELETE')
+            ->setDefault(static::STRATEGIES_AUTHORIZATION, [static::STRATEGY_AUTHORIZATION_API_KEY])
+            ->setMethods('DELETE');
+
+        $routeCollection->add(
+            'tasks-endpoint-delete',
             $route,
         );
 

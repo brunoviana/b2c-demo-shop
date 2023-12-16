@@ -88,7 +88,7 @@ class TasksFacadeTest extends Unit
         // Assert
         $this->tester->assertTaskResponseReturnedError(
             $updateTaskResponse,
-            'It\' impossible to update this task.',
+            'It\'s impossible to update this task.',
         );
     }
 

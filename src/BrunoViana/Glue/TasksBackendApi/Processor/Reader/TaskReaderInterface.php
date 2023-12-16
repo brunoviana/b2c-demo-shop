@@ -5,7 +5,7 @@ namespace BrunoViana\Glue\TasksBackendApi\Processor\Reader;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 
-interface TasksReaderInterface
+interface TaskReaderInterface
 {
     public function getTaskById(GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer;
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace BrunoVianaTest\Zed\Tasks\Helper;
+namespace BrunoVianaTest\Shared\Tasks\Helper;
 
 use Codeception\Module;
 use Generated\Shared\DataBuilder\TaskBuilder;

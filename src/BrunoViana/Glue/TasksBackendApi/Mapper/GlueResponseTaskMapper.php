@@ -30,19 +30,31 @@ class GlueResponseTaskMapper implements GlueResponseTaskMapperInterface
         $glueResponseTransfer = $this->createGlueResponseTransfer();
 
         if ($taskResponseTransfer->getErrors()->count()) {
-            foreach ($taskResponseTransfer->getErrors() as $errorTransfer) {
-                $glueResponseTransfer = $this->mapErrorToResponseTransfer(
-                    $glueResponseTransfer,
-                    $errorTransfer->getMessageOrFail(),
-                );
-            }
-
-            return $glueResponseTransfer;
+            return $this->mapTaskResponseTransferWithErrorToGlueResponse(
+                $taskResponseTransfer,
+                $glueResponseTransfer
+            );
         }
 
-        $glueResponseTransfer->addResource(
-            $this->createTasksBackendApiResource($taskResponseTransfer->getTaskTransfer())
-        );
+        if ($taskResponseTransfer->getTaskTransfer()) {
+            $glueResponseTransfer->addResource(
+                $this->createTasksBackendApiResource($taskResponseTransfer->getTaskTransfer())
+            );
+        }
+
+        return $glueResponseTransfer;
+    }
+
+    public function mapTaskResponseTransferWithErrorToGlueResponse(
+        TaskResponseTransfer $taskResponseTransfer,
+        GlueResponseTransfer $glueResponseTransfer,
+    ): GlueResponseTransfer {
+        foreach ($taskResponseTransfer->getErrors() as $errorTransfer) {
+            $glueResponseTransfer = $this->mapErrorToResponseTransfer(
+                $glueResponseTransfer,
+                $errorTransfer->getMessageOrFail(),
+            );
+        }
 
         return $glueResponseTransfer;
     }
@@ -62,6 +74,14 @@ class GlueResponseTaskMapper implements GlueResponseTaskMapperInterface
         return $glueResponseTransfer;
     }
 
+    public function createGlueResponseTransfer(): GlueResponseTransfer
+    {
+        $glueResponseTransfer = new GlueResponseTransfer();
+        $glueResponseTransfer->setMeta(array_merge($glueResponseTransfer->getMeta(), $this->getResponseHeaders()));
+
+        return $glueResponseTransfer;
+    }
+
     protected function createTasksBackendApiResource(
         TaskTransfer $taskTransfer,
     ): GlueResourceTransfer {
@@ -74,14 +94,6 @@ class GlueResponseTaskMapper implements GlueResponseTaskMapperInterface
             ->setId($taskTransfer->getIdTask())
             ->setType('tasks') // @TODO use constant
             ->setAttributes($tasksBackendApiAttributesTransfer);
-    }
-
-    protected function createGlueResponseTransfer(): GlueResponseTransfer
-    {
-        $glueResponseTransfer = new GlueResponseTransfer();
-        $glueResponseTransfer->setMeta(array_merge($glueResponseTransfer->getMeta(), $this->getResponseHeaders()));
-
-        return $glueResponseTransfer;
     }
 
     protected function createGlueErrorTransfer(string $message): GlueErrorTransfer
