@@ -16,7 +16,7 @@ use Spryker\Glue\Kernel\Backend\Controller\AbstractController;
 /**
  * @method \BrunoViana\Glue\TasksBackendApi\TasksBackendApiFactory getFactory()
  */
-class TasksResourceController  extends AbstractController //extends AbstractBackendApiController
+class TasksResourceController extends AbstractController
 {
     public function getCollectionAction(GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
     {

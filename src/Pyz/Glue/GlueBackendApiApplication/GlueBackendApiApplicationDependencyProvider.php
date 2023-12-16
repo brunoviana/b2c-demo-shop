@@ -116,6 +116,8 @@ class GlueBackendApiApplicationDependencyProvider extends SprykerGlueBackendApiA
             new PickingListStartPickingBackendResourcePlugin(),
             new PickingListItemsBackendResourcePlugin(),
             new WarehouseUserAssignmentsBackendResourcePlugin(),
+
+            new \BrunoViana\Glue\TasksBackendApi\Plugin\GlueBackendApiApplication\TasksBackendResourcePlugin(),
         ];
     }
 
@@ -126,7 +128,8 @@ class GlueBackendApiApplicationDependencyProvider extends SprykerGlueBackendApiA
     {
         return [
             new DynamicEntityRouteProviderPlugin(),
-            new TasksRouteProviderPlugin()
+
+//            new TasksRouteProviderPlugin()
         ];
     }
 }
