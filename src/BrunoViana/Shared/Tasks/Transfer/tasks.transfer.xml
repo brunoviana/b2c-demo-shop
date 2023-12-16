@@ -17,4 +17,27 @@
     <transfer name="TaskError">
         <property name="message" type="string"/>
     </transfer>
+
+    <transfer name="TaskCollection" strict="true">
+        <property name="tasks" type="Task[]" singular="task"/>
+        <property name="pagination" type="Pagination"/>
+    </transfer>
+
+    <transfer name="TaskCriteria" strict="true">
+        <property name="tasksConditions" type="TaskConditions"/>
+        <property name="pagination" type="Pagination"/>
+        <property name="sortCollection" type="Sort[]" singular="sort"/>
+    </transfer>
+
+    <transfer name="TaskConditions" strict="true">
+        <property name="taskIds" type="int[]" singular="taskId"/>
+    </transfer>
+
+    <transfer name="Task" strict="true" />
+
+    <transfer name="Pagination">
+    </transfer>
+
+    <transfer name="Sort">
+    </transfer>
 </transfers>

@@ -40,6 +40,17 @@ class TasksRouteProviderPlugin extends AbstractPlugin implements RouteProviderPl
     {
         // @TODO move to own class
 
+        $route = new Route('/tasks');
+        $route->setDefault('_controller', [TasksResourceController::class, 'getCollectionAction'])
+            ->setDefault('_method', 'GET')
+            ->setDefault(static::STRATEGIES_AUTHORIZATION, [static::STRATEGY_AUTHORIZATION_API_KEY])
+            ->setMethods('GET');
+
+        $routeCollection->add(
+            'tasks-endpoint-get-collection',
+            $route,
+        );
+
         $route = new Route('/tasks/{id}');
         $route->setDefault('_controller', [TasksResourceController::class, 'getAction'])
             ->setDefault('_method', 'GET')

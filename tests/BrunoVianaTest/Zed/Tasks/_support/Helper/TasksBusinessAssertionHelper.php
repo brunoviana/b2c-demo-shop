@@ -4,6 +4,7 @@ namespace BrunoVianaTest\Zed\Tasks\Helper;
 
 use BrunoViana\Zed\Tasks\Business\TasksFacadeInterface;
 use Codeception\Module;
+use Elastica\Task;
 use Generated\Shared\Transfer\TaskResponseTransfer;
 use Generated\Shared\Transfer\TaskTransfer;
 use SprykerTest\Shared\Testify\Helper\LocatorHelperTrait;
@@ -138,6 +139,41 @@ class TasksBusinessAssertionHelper extends Module
         $this->assertTrue(
             $taskResponseTransfer->getIsSuccessful(),
             'Response must return successful flag as true',
+        );
+    }
+
+    public function assertGetTaskCollectionResponseIsCorrect(
+        TaskTransfer $expectedTaskTransfer,
+        TaskTransfer $actualTaskTransfer,
+    ): void {
+        $this->assertEquals(
+            $expectedTaskTransfer->getIdTask(),
+            $actualTaskTransfer->getIdTask(),
+            'Actual task must have the same id as expected task',
+        );
+
+        $this->assertEquals(
+            $expectedTaskTransfer->getTitle(),
+            $actualTaskTransfer->getTitle(),
+            'Actual task must have the same title as expected task',
+        );
+
+        $this->assertEquals(
+            $expectedTaskTransfer->getDescription(),
+            $actualTaskTransfer->getDescription(),
+            'Actual task must have the same description as expected task',
+        );
+
+        $this->assertEquals(
+            $expectedTaskTransfer->getStatus(),
+            $actualTaskTransfer->getStatus(),
+            'Actual task must have the same status as expected task',
+        );
+
+        $this->assertEquals(
+            new \Datetime($expectedTaskTransfer->getDueAt()),
+            new \DateTime($actualTaskTransfer->getDueAt()),
+            'Actual task must have the same due date as expected task',
         );
     }
 

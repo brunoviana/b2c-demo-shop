@@ -7,6 +7,7 @@ namespace BrunoVianaTest\Glue\TasksBackendApi;
 use Generated\Shared\DataBuilder\TaskBuilder;
 use Generated\Shared\Transfer\GlueResourceTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
+use Generated\Shared\Transfer\TasksBackendApiAttributesTransfer;
 use Generated\Shared\Transfer\TaskTransfer;
 
 /**
@@ -100,6 +101,35 @@ class TasksBackendApiTester extends \Codeception\Actor
         $this->assertCount(0, $glueResponseTransfer->getResources());
     }
 
+    public function assertTaskTransfersAreTheSame(
+        TaskTransfer $expectedTaskTransfer,
+        TasksBackendApiAttributesTransfer $actualTaskTransfer,
+    ): void {
+        $this->assertSame(
+            $expectedTaskTransfer->getTitle(),
+            $actualTaskTransfer->getTitle(),
+            'Returned task title not equals the expected value'
+        );
+
+        $this->assertSame(
+            $expectedTaskTransfer->getDescription(),
+            $actualTaskTransfer->getDescription(),
+            'Returned task description not equals the expected value'
+        );
+
+        $this->assertSame(
+            $expectedTaskTransfer->getStatus(),
+            $actualTaskTransfer->getStatus(),
+            'Returned task description not equals the expected value'
+        );
+
+        $this->assertEquals(
+            new \DateTime($expectedTaskTransfer->getDueAt()),
+            new \DateTime($actualTaskTransfer->getDueAt()),
+            'Returned task due date not equals the expected value'
+        );
+    }
+
     protected function assertTaskResourceControllerReturnedGlueResponseProperly(
         GlueResponseTransfer $glueResponseTransfer,
         TaskTransfer $expectedTaskTransfer,
@@ -113,28 +143,9 @@ class TasksBackendApiTester extends \Codeception\Actor
         $this->assertNotNull($taskResource->getId());
         $this->assertNotNull($taskResource->getAttributes());
 
-        $this->assertSame(
-            $expectedTaskTransfer->getTitle(),
-            $tasksBackendApiAttributesTransfer->getTitle(),
-            'Returned task title not equals the expected value'
-        );
-
-        $this->assertSame(
-            $expectedTaskTransfer->getDescription(),
-            $tasksBackendApiAttributesTransfer->getDescription(),
-            'Returned task description not equals the expected value'
-        );
-
-        $this->assertSame(
-            $expectedTaskTransfer->getStatus(),
-            $tasksBackendApiAttributesTransfer->getStatus(),
-            'Returned task description not equals the expected value'
-        );
-
-        $this->assertEquals(
-            new \DateTime($expectedTaskTransfer->getDueAt()),
-            new \DateTime($tasksBackendApiAttributesTransfer->getDueAt()),
-            'Returned task due date not equals the expected value'
+        $this->assertTaskTransfersAreTheSame(
+            $expectedTaskTransfer,
+            $tasksBackendApiAttributesTransfer
         );
     }
 }

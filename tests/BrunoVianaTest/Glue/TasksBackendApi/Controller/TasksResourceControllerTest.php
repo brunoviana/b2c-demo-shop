@@ -13,6 +13,69 @@ class TasksResourceControllerTest extends Unit
 {
     protected TasksBackendApiTester $tester;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->tester->ensureTasksTableIsEmpty();
+    }
+
+    public function testGetCollectionReturnsTaskSuccessfully(): void
+    {
+        // Arrange
+        $taskTransfer1 = $this->tester->haveTask();
+        $taskTransfer2 = $this->tester->haveTask();
+        $taskTransfer3 = $this->tester->haveTask();
+
+        // Act
+        $glueResponseTransfer = (new TasksResourceController())->getCollectionAction(
+            new GlueRequestTransfer()
+        );
+
+        // Assert
+        $this->assertCount(0, $glueResponseTransfer->getErrors());
+        $this->assertCount(3, $glueResponseTransfer->getResources());
+
+        $this->tester->assertTaskTransfersAreTheSame(
+            $taskTransfer1,
+            $glueResponseTransfer->getResources()->offsetGet(0)->getAttributesOrFail(),
+        );
+
+        $this->tester->assertTaskTransfersAreTheSame(
+            $taskTransfer2,
+            $glueResponseTransfer->getResources()->offsetGet(1)->getAttributesOrFail(),
+        );
+
+        $this->tester->assertTaskTransfersAreTheSame(
+            $taskTransfer3,
+            $glueResponseTransfer->getResources()->offsetGet(2)->getAttributesOrFail(),
+        );
+    }
+
+    public function testGetCollectionFilterByIdTaskSuccessfully(): void
+    {
+        // Arrange
+        $this->tester->haveTask();
+        $taskTransfer = $this->tester->haveTask();
+        $this->tester->haveTask();
+
+        $glueRequestTransfer = (new GlueRequestTransfer())->setResource(
+            (new GlueResourceTransfer())->setId($taskTransfer->getIdTask()),
+        );
+
+        // Act
+        $glueResponseTransfer = (new TasksResourceController())->getCollectionAction($glueRequestTransfer);
+
+        // Assert
+        $this->assertCount(0, $glueResponseTransfer->getErrors());
+        $this->assertCount(1, $glueResponseTransfer->getResources());
+
+        $this->tester->assertTaskTransfersAreTheSame(
+            $taskTransfer,
+            $glueResponseTransfer->getResources()->offsetGet(0)->getAttributesOrFail(),
+        );
+    }
+
     public function testGetActionReturnsTaskSuccessfully(): void
     {
         // Arrange

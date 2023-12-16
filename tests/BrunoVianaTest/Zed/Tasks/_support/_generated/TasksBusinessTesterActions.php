@@ -1,4 +1,4 @@
-<?php  //[STAMP] 8bb5f1408773305a0ae821a3a855dbd1
+<?php  //[STAMP] 160019e3e0341e35620774a24dbef4da
 // phpcs:ignoreFile
 namespace BrunoVianaTest\Zed\Tasks\_generated;
 
@@ -291,6 +291,17 @@ trait TasksBusinessTesterActions
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
+     * @see \BrunoVianaTest\Shared\Tasks\Helper\TaskDataHelper::ensureTasksTableIsEmpty()
+     */
+    public function ensureTasksTableIsEmpty(): void {
+        $this->getScenario()->runStep(new \Codeception\Step\Action('ensureTasksTableIsEmpty', func_get_args()));
+    }
+
+ 
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     *
      * @see \BrunoVianaTest\Zed\Tasks\Helper\TasksBusinessAssertionHelper::assertCreateTaskResponseIsCorrect()
      */
     public function assertCreateTaskResponseIsCorrect(\Generated\Shared\Transfer\TaskResponseTransfer $taskResponseTransfer): void {
@@ -350,5 +361,16 @@ trait TasksBusinessTesterActions
      */
     public function assertGetTaskByIdResponseIsCorrect(\Generated\Shared\Transfer\TaskResponseTransfer $taskResponseTransfer): void {
         $this->getScenario()->runStep(new \Codeception\Step\Action('assertGetTaskByIdResponseIsCorrect', func_get_args()));
+    }
+
+ 
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     *
+     * @see \BrunoVianaTest\Zed\Tasks\Helper\TasksBusinessAssertionHelper::assertGetTaskCollectionResponseIsCorrect()
+     */
+    public function assertGetTaskCollectionResponseIsCorrect(\Generated\Shared\Transfer\TaskTransfer $expectedTaskTransfer, \Generated\Shared\Transfer\TaskTransfer $actualTaskTransfer): void {
+        $this->getScenario()->runStep(new \Codeception\Step\Action('assertGetTaskCollectionResponseIsCorrect', func_get_args()));
     }
 }

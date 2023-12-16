@@ -7,6 +7,8 @@ use Generated\Shared\DataBuilder\TaskBuilder;
 use Generated\Shared\Transfer\TaskTransfer;
 use Generated\Shared\Transfer\UserTransfer;
 use BrunoViana\Zed\Tasks\Business\TasksFacadeInterface;
+use Orm\Zed\Tasks\Persistence\BvTaskQuery;
+use Orm\Zed\WarehouseUser\Persistence\SpyWarehouseUserAssignmentQuery;
 use SprykerTest\Shared\Testify\Helper\DataCleanupHelperTrait;
 use SprykerTest\Shared\Testify\Helper\LocatorHelperTrait;
 
@@ -31,7 +33,17 @@ class TaskDataHelper extends Module
         return $taskTransfer;
     }
 
-    private function getTaskFacade(): TasksFacadeInterface
+    public function ensureTasksTableIsEmpty(): void
+    {
+        $this->getTasksQuery()->deleteAll();
+    }
+
+    protected function getTasksQuery(): BvTaskQuery
+    {
+        return BvTaskQuery::create();
+    }
+
+    protected function getTaskFacade(): TasksFacadeInterface
     {
         return $this->getLocatorHelper()->getLocator()->tasks()->facade();
     }

@@ -2,6 +2,8 @@
 
 namespace BrunoViana\Zed\Tasks\Business;
 
+use Generated\Shared\Transfer\TaskCollectionTransfer;
+use Generated\Shared\Transfer\TaskCriteriaTransfer;
 use Generated\Shared\Transfer\TaskResponseTransfer;
 use Generated\Shared\Transfer\TaskTransfer;
 use BrunoViana\Zed\Tasks\Business\TasksFacadeInterface;
@@ -33,5 +35,10 @@ class TasksFacade extends AbstractFacade implements TasksFacadeInterface
     public function getTaskById(int $taskId): TaskResponseTransfer
     {
         return $this->getFactory()->createTaskReader()->getTaskById($taskId);
+    }
+
+    public function getTaskCollection(TaskCriteriaTransfer $taskCriteriaTransfer): TaskCollectionTransfer
+    {
+        return $this->getRepository()->getTaskCollection($taskCriteriaTransfer);
     }
 }

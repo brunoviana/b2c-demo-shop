@@ -18,8 +18,10 @@ use Spryker\Glue\Kernel\Backend\Controller\AbstractController;
  */
 class TasksResourceController  extends AbstractController //extends AbstractBackendApiController
 {
-
-    // request collection
+    public function getCollectionAction(GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
+    {
+        return $this->getFactory()->createTaskReader()->getTaskCollection($glueRequestTransfer);
+    }
 
     public function getAction(GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
     {

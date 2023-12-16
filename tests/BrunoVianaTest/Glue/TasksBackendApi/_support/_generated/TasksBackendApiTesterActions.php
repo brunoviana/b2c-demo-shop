@@ -1,4 +1,4 @@
-<?php  //[STAMP] 7dee642b5cbf1e99cc4261cfac51c347
+<?php  //[STAMP] 50ffa8edad27bfb58bf7ba5c96daf229
 // phpcs:ignoreFile
 namespace BrunoVianaTest\Glue\TasksBackendApi\_generated;
 
@@ -1971,5 +1971,16 @@ trait TasksBackendApiTesterActions
      */
     public function haveTask(array $override = []): \Generated\Shared\Transfer\TaskTransfer {
         return $this->getScenario()->runStep(new \Codeception\Step\Action('haveTask', func_get_args()));
+    }
+
+ 
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     *
+     * @see \BrunoVianaTest\Shared\Tasks\Helper\TaskDataHelper::ensureTasksTableIsEmpty()
+     */
+    public function ensureTasksTableIsEmpty(): void {
+        $this->getScenario()->runStep(new \Codeception\Step\Action('ensureTasksTableIsEmpty', func_get_args()));
     }
 }

@@ -6,6 +6,7 @@ use Generated\Shared\Transfer\GlueErrorTransfer;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResourceTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
+use Generated\Shared\Transfer\TaskCollectionTransfer;
 use Generated\Shared\Transfer\TaskResponseTransfer;
 use Generated\Shared\Transfer\TasksBackendApiAttributesTransfer;
 use Generated\Shared\Transfer\TaskTransfer;
@@ -22,6 +23,27 @@ class GlueResponseTaskMapper implements GlueResponseTaskMapperInterface
     public function __construct(
         protected TasksBackendApiAttributesMapperInterface $tasksBackendApiAttributesMapper,
     ) {}
+
+    public function mapTaskResponseCollectionToGlueResponseTransfer(
+        TaskCollectionTransfer $taskCollectionTransfer,
+        GlueRequestTransfer    $glueRequestTransfer,
+    ): GlueResponseTransfer {
+        $glueResponseTransfer = $this->createGlueResponseTransfer();
+
+        foreach ($taskCollectionTransfer->getTasks() as $taskTransfer) {
+            $glueResponseTransfer->addResource(
+                $this->createTasksBackendApiResource($taskTransfer),
+            );
+        }
+
+        if ($taskCollectionTransfer->getPagination()) {
+            $glueResponseTransfer->setPagination(
+                $taskCollectionTransfer->getPagination()
+            );
+        }
+
+        return $glueResponseTransfer;
+    }
 
     public function mapTaskResponseTransferToGlueResponseTransfer(
         TaskResponseTransfer $taskResponseTransfer,

@@ -3,6 +3,8 @@
 namespace BrunoViana\Glue\TasksBackendApi\Dependency\Facade;
 
 use BrunoViana\Zed\Tasks\Business\TasksFacadeInterface;
+use Generated\Shared\Transfer\TaskCollectionTransfer;
+use Generated\Shared\Transfer\TaskCriteriaTransfer;
 use Generated\Shared\Transfer\TaskResponseTransfer;
 use Generated\Shared\Transfer\TaskTransfer;
 
@@ -30,6 +32,11 @@ class TaskBackendApiToTasksFacade implements TaskBackendApiToTasksFacadeInterfac
     public function getTaskById(int $taskId): TaskResponseTransfer
     {
         return $this->tasksFacade->getTaskById($taskId);
+    }
+
+    public function getTaskCollection(TaskCriteriaTransfer $taskCriteriaTransfer): TaskCollectionTransfer
+    {
+        return $this->tasksFacade->getTaskCollection($taskCriteriaTransfer);
     }
 
 }

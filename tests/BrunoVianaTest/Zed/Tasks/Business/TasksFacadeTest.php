@@ -3,6 +3,10 @@
 namespace BrunoVianaTest\Zed\Tasks\Business;
 
 use Codeception\Test\Unit;
+use Generated\Shared\Transfer\PaginationTransfer;
+use Generated\Shared\Transfer\SortTransfer;
+use Generated\Shared\Transfer\TaskConditionsTransfer;
+use Generated\Shared\Transfer\TaskCriteriaTransfer;
 use Generated\Shared\Transfer\TaskTransfer;
 use BrunoVianaTest\Zed\Tasks\TasksBusinessTester;
 use Spryker\Shared\Kernel\Transfer\Exception\RequiredTransferPropertyException;
@@ -11,6 +15,13 @@ class TasksFacadeTest extends Unit
 {
 
     protected TasksBusinessTester $tester;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->tester->ensureTasksTableIsEmpty();
+    }
 
     public function testCreateTaskIsExecutedSuccessfully(): void
     {
@@ -131,5 +142,117 @@ class TasksFacadeTest extends Unit
         );
     }
 
+    public function testGetCollectionIsExecutedSuccessfully(): void
+    {
+        // Arrange
+        $taskTransfer = $this->tester->haveTask();
 
+        $taskCriteriaTransfer = new TaskCriteriaTransfer();
+
+        // Act
+        $taskCollectionTransfer = $this->tester->getFacade()->getTaskCollection(
+            $taskCriteriaTransfer
+        );
+
+        // Assert
+        $this->assertCount(1, $taskCollectionTransfer->getTasks());
+
+        $this->tester->assertGetTaskCollectionResponseIsCorrect(
+            $taskTransfer,
+            $taskCollectionTransfer->getTasks()->getIterator()->current(),
+        );
+    }
+
+    public function testGetCollectionFilterByTaskIdSuccessfully(): void
+    {
+        // Arrange
+        $this->tester->haveTask();
+        $this->tester->haveTask();
+        $taskTransfer = $this->tester->haveTask();
+
+        $taskConditions = new TaskConditionsTransfer();
+        $taskConditions->addTaskId(
+            $taskTransfer->getIdTask()
+        );
+
+        $taskCriteriaTransfer = new TaskCriteriaTransfer();
+        $taskCriteriaTransfer->setTasksConditions($taskConditions);
+
+        // Act
+        $taskCollectionTransfer = $this->tester->getFacade()->getTaskCollection(
+            $taskCriteriaTransfer
+        );
+
+        // Assert
+        $this->assertCount(1, $taskCollectionTransfer->getTasks());
+
+        $this->tester->assertGetTaskCollectionResponseIsCorrect(
+            $taskTransfer,
+            $taskCollectionTransfer->getTasks()->getIterator()->current(),
+        );
+    }
+
+    public function testGetCollectionReturnTasksPaginatedSuccessfully(): void
+    {
+        // Arrange
+        $this->tester->haveTask();
+        $taskTransfer = $this->tester->haveTask();
+        $this->tester->haveTask();
+
+        $paginationTransfer = (new PaginationTransfer())
+            ->setLimit(1)
+            ->setOffset(1);
+
+        $taskCriteriaTransfer = new TaskCriteriaTransfer();
+        $taskCriteriaTransfer->setPagination($paginationTransfer);
+
+        // Act
+        $taskCollectionTransfer = $this->tester->getFacade()->getTaskCollection(
+            $taskCriteriaTransfer
+        );
+
+        // Assert
+        $this->assertCount(1, $taskCollectionTransfer->getTasks());
+
+        $this->tester->assertGetTaskCollectionResponseIsCorrect(
+            $taskTransfer,
+            $taskCollectionTransfer->getTasks()->getIterator()->current(),
+        );
+    }
+
+    public function testGetCollectionReturnTasksSortedSuccessfully(): void
+    {
+        // Arrange
+        $taskTransfer3 = $this->tester->haveTask([TaskTransfer::TITLE => 'cccc']);
+        $taskTransfer2 = $this->tester->haveTask([TaskTransfer::TITLE => 'bbbb']);
+        $taskTransfer1 = $this->tester->haveTask([TaskTransfer::TITLE => 'aaaaa']);
+
+        $sortTransfer = (new SortTransfer())
+            ->setField(TaskTransfer::TITLE)
+            ->setIsAscending(true);
+
+        $taskCriteriaTransfer = new TaskCriteriaTransfer();
+        $taskCriteriaTransfer->addSort($sortTransfer);
+
+        // Act
+        $taskCollectionTransfer = $this->tester->getFacade()->getTaskCollection(
+            $taskCriteriaTransfer
+        );
+
+        // Assert
+        $this->tester->assertGetTaskCollectionResponseIsCorrect(
+            $taskTransfer1,
+            $taskCollectionTransfer->getTasks()->getIterator()->offsetGet(0),
+        );
+
+        $this->tester->assertGetTaskCollectionResponseIsCorrect(
+            $taskTransfer2,
+            $taskCollectionTransfer->getTasks()->getIterator()->offsetGet(1),
+        );
+
+        $this->tester->assertGetTaskCollectionResponseIsCorrect(
+            $taskTransfer3,
+            $taskCollectionTransfer->getTasks()->getIterator()->offsetGet(2),
+        );
+    }
 }

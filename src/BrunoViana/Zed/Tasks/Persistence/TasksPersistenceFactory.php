@@ -2,6 +2,7 @@
 
 namespace BrunoViana\Zed\Tasks\Persistence;
 
+use BrunoViana\Zed\Tasks\Persistence\Mapper\TaskMapperInterface;
 use Orm\Zed\Tasks\Persistence\BvTaskQuery;
 use BrunoViana\Zed\Tasks\Persistence\Mapper\TaskMapper;
 use Spryker\Zed\Kernel\Persistence\AbstractPersistenceFactory;
@@ -13,7 +14,7 @@ use Spryker\Zed\Kernel\Persistence\AbstractPersistenceFactory;
  */
 class TasksPersistenceFactory extends AbstractPersistenceFactory
 {
-    public function createTaskMapper(): TaskMapper
+    public function createTaskMapper(): TaskMapperInterface
     {
         return new TaskMapper();
     }
