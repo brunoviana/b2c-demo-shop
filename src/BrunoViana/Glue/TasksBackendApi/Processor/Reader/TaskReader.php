@@ -19,12 +19,26 @@ class TaskReader implements TaskReaderInterface
     public function getTaskCollection(
         GlueRequestTransfer $glueRequestTransfer
     ): GlueResponseTransfer {
-
         $taskCriteriaTransfer = $this->createTaskCriteriaTransfer($glueRequestTransfer);
         $tasksCollectionTransfer = $this->tasksFacade->getTaskCollection($taskCriteriaTransfer);
 
         return $this->responseMapper->mapTaskResponseCollectionToGlueResponseTransfer(
             $tasksCollectionTransfer,
+            $glueRequestTransfer
+        );
+    }
+
+    public function getTaskById(
+        GlueRequestTransfer $glueRequestTransfer
+    ): GlueResponseTransfer {
+        $glueRequestTransfer->getResource()->requireId();
+
+        $taskResponseTransfer = $this->tasksFacade->getTaskById(
+            $glueRequestTransfer->getResource()->getId(),
+        );
+
+        return $this->responseMapper->mapTaskResponseTransferToGlueResponseTransfer(
+            $taskResponseTransfer,
             $glueRequestTransfer
         );
     }
@@ -45,18 +59,5 @@ class TaskReader implements TaskReaderInterface
             ->setPagination($glueRequestTransfer->getPagination())
             ->setSortCollection($glueRequestTransfer->getSortings())
             ->setTasksConditions($taskConditions);
-    }
-
-    public function getTaskById(
-        GlueRequestTransfer $glueRequestTransfer
-    ): GlueResponseTransfer {
-        $taskResponseTransfer = $this->tasksFacade->getTaskById(
-            $glueRequestTransfer->getResource()->getId(),
-        );
-
-        return $this->responseMapper->mapTaskResponseTransferToGlueResponseTransfer(
-            $taskResponseTransfer,
-            $glueRequestTransfer
-        );
     }
 }
