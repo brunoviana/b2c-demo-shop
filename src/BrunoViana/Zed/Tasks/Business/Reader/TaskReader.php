@@ -17,7 +17,8 @@ class TaskReader implements TaskReaderInterface
         $taskTransfer = $this->taskRepository->getTaskById($taskId);
 
         if (!$taskTransfer) {
-            return (new TaskResponseTransfer())->setIsSuccessful(false)
+            return (new TaskResponseTransfer())
+                ->setIsSuccessful(false)
                 ->addError(
                     (new TaskErrorTransfer())->setMessage(
                         'Task not found.',
