@@ -27,12 +27,16 @@ class TaskWriter implements TaskWriterInterface
             return $this->responseMapper->createForbiddenResponse();
         }
 
-        $taskResponseTransfer = $this->tasksFacade->createTask(
-            $this->taskBackendApiAttributesMapper->mapTasksBackendApiAttributesToTaskTransfer(
-                $taskBackendApiAttributesTransfer,
-                new TaskTransfer(),
-            )
+        $taskTransfer = $this->taskBackendApiAttributesMapper->mapTasksBackendApiAttributesToTaskTransfer(
+            $taskBackendApiAttributesTransfer,
+            new TaskTransfer(),
         );
+
+        $taskTransfer->setIdAssignee(
+            $glueRequestTransfer->getRequestUserOrFail()->getSurrogateIdentifier()
+        );
+
+        $taskResponseTransfer = $this->tasksFacade->createTask($taskTransfer);
 
         return $this->responseMapper->mapTaskResponseTransferToGlueResponseTransfer(
             $taskResponseTransfer,

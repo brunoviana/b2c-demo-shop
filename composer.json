@@ -321,12 +321,9 @@
         "prefer-mid": [
             "COMPOSER_MEMORY_LIMIT=-1 composer require twig/twig:\"^2.9.0\""
         ],
-        "bv:tests:build": [
-            "vendor/bin/codecept build -c codeception.brunoviana.yml"
-        ],
-        "bv:tests:tasks": [
-            "vendor/bin/codecept run -c tests/BrunoVianaTest/Zed/Tasks/"
-        ],
+        "bv:tests:build": "vendor/bin/codecept build -c codeception.brunoviana.yml",
+        "bv:tests:tasks": "vendor/bin/codecept run -c tests/BrunoVianaTest/Zed/Tasks/",
+        "bv:tests:tasks-backend-api": "vendor/bin/codecept run -c tests/BrunoVianaTest/Glue/TasksBackendApi/",
         "bv:tests:all": [
             "vendor/bin/codecept build -c codeception.brunoviana.yml",
             "vendor/bin/codecept run -c codeception.brunoviana.yml"

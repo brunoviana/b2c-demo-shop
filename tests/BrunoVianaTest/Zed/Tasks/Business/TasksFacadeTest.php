@@ -65,7 +65,7 @@ class TasksFacadeTest extends Unit
      */
     public function testUpdateTaskShouldPatchExistentTaskSuccessfully(
         array $attributeToChange
-    ): void{
+    ): void {
         // Arrange
         $taskTransfer = $this->tester->haveTaskWithUser();
 

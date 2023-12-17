@@ -9,6 +9,7 @@ use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueRequestUserTransfer;
 use Generated\Shared\Transfer\GlueResourceTransfer;
 use Generated\Shared\Transfer\TasksBackendApiAttributesTransfer;
+use Generated\Shared\Transfer\TaskTransfer;
 
 class TasksResourceControllerTest extends Unit
 {
@@ -21,107 +22,83 @@ class TasksResourceControllerTest extends Unit
         $this->tester->ensureTasksTableIsEmpty();
     }
 
-    public function testGetCollectionReturnsTaskSuccessfully(): void
+    public function testGetCollectionShouldReturnAllUserTasksIfNoCriteriaIsProvided(): void
     {
         // Arrange
-        $taskTransfer1 = $this->tester->haveTask();
-        $taskTransfer2 = $this->tester->haveTask();
-        $taskTransfer3 = $this->tester->haveTask();
-
         $adminUserTransfer = $this->tester->haveUser();
 
-        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
-            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
+        $taskTransfer1 = $this->tester->haveTaskWithUser($adminUserTransfer);
+        $taskTransfer2 = $this->tester->haveTaskWithUser($adminUserTransfer);
+        $taskTransfer3 = $this->tester->haveTaskWithUser($adminUserTransfer);
+
+        $glueRequestTransfer = $this->tester->createGlueRequestTransferWithUser(
+            $adminUserTransfer
         );
 
         // Act
         $glueResponseTransfer = (new TasksResourceController())->getCollectionAction($glueRequestTransfer);
 
         // Assert
-        $this->assertCount(0, $glueResponseTransfer->getErrors());
-        $this->assertCount(3, $glueResponseTransfer->getResources());
-
-        $this->tester->assertTaskTransfersAreTheSame(
+        $this->tester->assetGetCollectionReturnedGlueResponseWithSuccessfullData(
+            $glueResponseTransfer,
             $taskTransfer1,
-            $glueResponseTransfer->getResources()->offsetGet(0)->getAttributesOrFail(),
-        );
-
-        $this->tester->assertTaskTransfersAreTheSame(
             $taskTransfer2,
-            $glueResponseTransfer->getResources()->offsetGet(1)->getAttributesOrFail(),
-        );
-
-        $this->tester->assertTaskTransfersAreTheSame(
             $taskTransfer3,
-            $glueResponseTransfer->getResources()->offsetGet(2)->getAttributesOrFail(),
         );
     }
 
-    public function testGetCollectionFilterByIdTaskSuccessfully(): void
+    public function testGetCollectionShouldReturnUserTasksFilteredByIdIfCriteriaIsProvided(): void
     {
         // Arrange
-        $this->tester->haveTask();
-        $taskTransfer = $this->tester->haveTask();
-        $this->tester->haveTask();
-
         $adminUserTransfer = $this->tester->haveUser();
 
-        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
-            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
-        )->setResource(
-            (new GlueResourceTransfer())->setId($taskTransfer->getIdTask()),
-        );
+        $this->tester->haveTaskWithUser($adminUserTransfer);
+        $taskTransfer = $this->tester->haveTaskWithUser($adminUserTransfer);
+        $this->tester->haveTaskWithUser($adminUserTransfer);
+
+        $glueRequestTransfer = $this->tester->createGlueRequestTransferWithUser($adminUserTransfer);
+        $glueRequestTransfer = $this->tester->addGlueResourceWithTaskIdToGlueRequest($glueRequestTransfer, $taskTransfer);
 
         // Act
         $glueResponseTransfer = (new TasksResourceController())->getCollectionAction($glueRequestTransfer);
 
         // Assert
-        $this->assertCount(0, $glueResponseTransfer->getErrors());
-        $this->assertCount(1, $glueResponseTransfer->getResources());
-
-        $this->tester->assertTaskTransfersAreTheSame(
+        $this->tester->assetGetCollectionReturnedGlueResponseWithSuccessfullData(
+            $glueResponseTransfer,
             $taskTransfer,
-            $glueResponseTransfer->getResources()->offsetGet(0)->getAttributesOrFail(),
         );
     }
 
-    public function testGetActionReturnsTaskSuccessfully(): void
+    public function testGetActionShouldReturnUserTaskByTaskId(): void
     {
         // Arrange
-        $taskTranser = $this->tester->haveTask();
-
         $adminUserTransfer = $this->tester->haveUser();
+        $taskTransfer = $this->tester->haveTaskWithUser($adminUserTransfer);
 
-        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
-            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
-        )->setResource(
-            (new GlueResourceTransfer())->setId($taskTranser->getIdTask()),
-        );
+        $glueRequestTransfer = $this->tester->createGlueRequestTransferWithUser($adminUserTransfer);
+        $glueRequestTransfer = $this->tester->addGlueResourceWithTaskIdToGlueRequest($glueRequestTransfer, $taskTransfer);
 
         // Act
         $glueResponseTransfer = (new TasksResourceController())->getAction($glueRequestTransfer);
 
         // Assert
-        $this->tester->assertTaskResourceControllerGetActionReturnedGlueResponseProperly(
+        $this->tester->assertGetActionReturnedGlueResponseWithSuccessfullData(
             $glueResponseTransfer,
-            $taskTranser,
+            $taskTransfer,
         );
     }
 
-    public function testPostActionCreateTaskSuccessfully(): void
+    public function testPostActionShouldCreateUserTaskSuccessfully(): void
     {
         // Arrange
-        $taskTransfer = $this->tester->createTaskTransfer();
-        $taskBackendApiAttribute = (new TasksBackendApiAttributesTransfer())->fromArray($taskTransfer->toArray());
+        $adminUserTransfer = $this->tester->haveUser();
+        $taskTransfer = $this->tester->createTaskTransferWithUser($adminUserTransfer);
+
+        $taskBackendApiAttribute = $this->tester->createTasksBackendApiAttributesTransferFromTaskTransfer($taskTransfer);
         $taskBackendApiAttribute->setIdTask(null);
 
-        $adminUserTransfer = $this->tester->haveUser();
-
-        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
-            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
-        )->setResource(
-            (new GlueResourceTransfer())->setId($taskTransfer->getIdTask()),
-        );
+        $glueRequestTransfer = $this->tester->createGlueRequestTransferWithUser($adminUserTransfer);
+        $glueRequestTransfer = $this->tester->addGlueResourceWithTaskIdToGlueRequest($glueRequestTransfer, $taskTransfer);
 
         // Act
         $glueResponseTransfer = (new TasksResourceController())->postAction(
@@ -130,29 +107,33 @@ class TasksResourceControllerTest extends Unit
         );
 
         // Assert
-        $this->tester->assertTaskResourceControllerPostActionReturnedGlueResponseProperly(
+        $this->tester->assertPostActionReturnedGlueResponseWithSuccessfullData(
             $glueResponseTransfer,
+        );
+
+        $this->tester->assertActualTaskTransfersIsSameAsExpetedTaskTransfer(
             $taskTransfer,
+            $glueResponseTransfer->getResources()->getIterator()->current()->getAttributes()
         );
     }
 
-    public function testPatchActionUpdateTaskSuccessfully(): void
-    {
+    /**
+     * @return void
+     * @dataProvider taskAttributesForPatchProvider
+     */
+    public function testPatchActionShouldUpdateUserTaskSuccessfully(
+        array $attributeToChange
+    ): void {
         // Arrange
-        $taskTransfer = $this->tester->haveTask();
-        $taskTransfer->setTitle('another-title');
-        $taskTransfer->setDescription('another-title');
-        $taskTransfer->setStatus('in_progress');
-
-        $taskBackendApiAttribute = (new TasksBackendApiAttributesTransfer())->fromArray($taskTransfer->toArray());
-
         $adminUserTransfer = $this->tester->haveUser();
+        $taskTransfer = $this->tester->haveTaskWithUser($adminUserTransfer);
 
-        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
-            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
-        )->setResource(
-            (new GlueResourceTransfer())->setId($taskTransfer->getIdTask()),
-        );
+        $taskTransfer->fromArray($attributeToChange);
+
+        $taskBackendApiAttribute = $this->tester->createTasksBackendApiAttributesTransferFromTaskTransfer($taskTransfer);
+
+        $glueRequestTransfer = $this->tester->createGlueRequestTransferWithUser($adminUserTransfer);
+        $glueRequestTransfer = $this->tester->addGlueResourceWithTaskIdToGlueRequest($glueRequestTransfer, $taskTransfer);
 
         // Act
         $glueResponseTransfer = (new TasksResourceController())->patchAction(
@@ -161,26 +142,29 @@ class TasksResourceControllerTest extends Unit
         );
 
         // Assert
-        $this->tester->assertTaskResourceControllerPatchActionReturnedGlueResponseProperly(
+        $this->tester->assertPatchActionReturnedGlueResponseWithSuccessfullData(
             $glueResponseTransfer,
             $taskTransfer,
         );
+
+        $this->tester->assertActualTaskTransfersIsSameAsExpetedTaskTransfer(
+            $taskTransfer,
+            $glueResponseTransfer->getResources()->getIterator()->current()->getAttributes()
+        );
     }
 
-    public function testPatchActionReturnsGlueResponseWithNotFoundIfTaskDoesntExist(): void
+    public function testPatchActionShouldReturnNotFoundIfTaskDoesntExist(): void
     {
         // Arrange
-        $taskTransfer = $this->tester->createTaskTransfer();
-
-        $taskBackendApiAttribute = (new TasksBackendApiAttributesTransfer())->fromArray($taskTransfer->toArray());
-
         $adminUserTransfer = $this->tester->haveUser();
+        $taskTransfer = $this->tester->createTaskTransferWithUser($adminUserTransfer);
 
-        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
-            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
-        )->setResource(
-            (new GlueResourceTransfer())->setId(-1),
-        );
+        $taskTransfer->setIdTask(-1);
+
+        $taskBackendApiAttribute = $this->tester->createTasksBackendApiAttributesTransferFromTaskTransfer($taskTransfer);
+
+        $glueRequestTransfer = $this->tester->createGlueRequestTransferWithUser($adminUserTransfer);
+        $glueRequestTransfer = $this->tester->addGlueResourceWithTaskIdToGlueRequest($glueRequestTransfer, $taskTransfer);
 
         // Act
         $glueResponseTransfer = (new TasksResourceController())->patchAction(
@@ -189,44 +173,41 @@ class TasksResourceControllerTest extends Unit
         );
 
         // Assert
-        $this->tester->assertTaskResourceControllerPatchActionReturnedGlueResponseProperlyWhenTaskDoesntExist(
+        $this->tester->assertGlueResponseHasNotFoundData(
             $glueResponseTransfer,
         );
     }
 
-    public function testDeleteActionRemoveTaskSuccessfully(): void
+    public function testDeleteActionShouldRemoveUserTaskFromStorage(): void
     {
         // Arrange
-        $taskTranser = $this->tester->haveTask();
-
         $adminUserTransfer = $this->tester->haveUser();
+        $taskTransfer = $this->tester->haveTaskWithUser($adminUserTransfer);
 
-        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
-            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
-        )->setResource(
-            (new GlueResourceTransfer())->setId($taskTranser->getIdTask()),
-        );
+        $glueRequestTransfer = $this->tester->createGlueRequestTransferWithUser($adminUserTransfer);
+        $glueRequestTransfer = $this->tester->addGlueResourceWithTaskIdToGlueRequest($glueRequestTransfer, $taskTransfer);
 
         // Act
         $glueResponseTransfer = (new TasksResourceController())->deleteAction($glueRequestTransfer);
 
         // Assert
-        $this->tester->assertTaskResourceControllerDeleteActionReturnedGlueResponseProperly(
-            $glueResponseTransfer,
-            $taskTranser,
+        $this->tester->assertDeleteActionReturnedGlueResponseWithSuccessfullData(
+            $glueResponseTransfer
         );
     }
 
-    public function testDeleteActionReturnsGlueResponseWithNotFoundIfTaskDoesntExist(): void
+    public function testDeleteActionShouldReturnNotFoundIfTaskDoesntExist(): void
     {
         // Arrange
         $adminUserTransfer = $this->tester->haveUser();
+        $taskTransfer = $this->tester->createTaskTransferWithUser($adminUserTransfer);
 
-        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
-            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
-        )->setResource(
-            (new GlueResourceTransfer())->setId(-1),
-        );
+        $taskTransfer->setIdTask(-1);
+
+        $taskBackendApiAttribute = $this->tester->createTasksBackendApiAttributesTransferFromTaskTransfer($taskTransfer);
+
+        $glueRequestTransfer = $this->tester->createGlueRequestTransferWithUser($adminUserTransfer);
+        $glueRequestTransfer = $this->tester->addGlueResourceWithTaskIdToGlueRequest($glueRequestTransfer, $taskTransfer);
 
         // Act
         $glueResponseTransfer = (new TasksResourceController())->deleteAction(
@@ -234,8 +215,21 @@ class TasksResourceControllerTest extends Unit
         );
 
         // Assert
-        $this->tester->assertTaskResourceControllerDeleteActionReturnedGlueResponseProperlyWhenTaskDoesntExist(
+        $this->tester->assertGlueResponseHasNotFoundData(
             $glueResponseTransfer,
         );
+    }
+
+    // validate user
+    // validate user permission
+
+    public function taskAttributesForPatchProvider()
+    {
+        return [
+            [[ TaskTransfer::TITLE => 'changed-title' ]],
+            [[ TaskTransfer::DESCRIPTION => 'changed-description' ]],
+            [[ TaskTransfer::STATUS => 'in_progress' ]],
+            [[ TaskTransfer::DUE_AT => date('Y-m-d H:i:s') ]],
+        ];
     }
 }

@@ -11,7 +11,7 @@ class TasksBackendApiAttributesMapper implements TasksBackendApiAttributesMapper
         TaskTransfer $taskTransfer,
         TasksBackendApiAttributesTransfer $taskBackendApiAttributeTransfer,
     ): TasksBackendApiAttributesTransfer {
-        return $taskBackendApiAttributeTransfer->fromArray($taskTransfer->toArray());
+        return $taskBackendApiAttributeTransfer->fromArray($taskTransfer->toArray(), true);
     }
 
     public function mapTasksBackendApiAttributesToTaskTransfer(
