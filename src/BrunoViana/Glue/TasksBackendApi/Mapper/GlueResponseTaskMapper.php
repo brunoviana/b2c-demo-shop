@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\TaskResponseTransfer;
 use Generated\Shared\Transfer\TasksBackendApiAttributesTransfer;
 use Generated\Shared\Transfer\TaskTransfer;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class GlueResponseTaskMapper implements GlueResponseTaskMapperInterface
 {
@@ -113,6 +114,22 @@ class GlueResponseTaskMapper implements GlueResponseTaskMapperInterface
                 ->setStatus(Response::HTTP_FORBIDDEN)
                 ->setCode('5204')
             );
+    }
+
+    public function mapValidationErrorsToGlueResponse(ConstraintViolationListInterface $errors): GlueResponseTransfer
+    {
+        $glueResponseTransfer = (new GlueResponseTransfer())
+            ->setHttpStatus(Response::HTTP_BAD_REQUEST);
+
+        foreach ($errors as $error) {
+            $glueResponseTransfer->addError(
+                (new GlueErrorTransfer())->setMessage(
+                    sprintf('%s: %s', $error->getPropertyPath(), $error->getMessage())
+                )
+            );
+        }
+
+        return $glueResponseTransfer;
     }
 
     protected function createTasksBackendApiResource(

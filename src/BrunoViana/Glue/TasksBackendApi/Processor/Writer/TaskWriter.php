@@ -6,6 +6,7 @@ use BrunoViana\Glue\TasksBackendApi\Dependency\Facade\TaskBackendApiToTasksFacad
 use BrunoViana\Glue\TasksBackendApi\Mapper\GlueRequestTaskMapperInterface;
 use BrunoViana\Glue\TasksBackendApi\Mapper\GlueResponseTaskMapperInterface;
 use BrunoViana\Glue\TasksBackendApi\Mapper\TasksBackendApiAttributesMapperInterface;
+use BrunoViana\Glue\TasksBackendApi\Validator\TasksBackendApiAttributesValidatorInterface;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 use Generated\Shared\Transfer\TasksBackendApiAttributesTransfer;
@@ -17,6 +18,7 @@ class TaskWriter implements TaskWriterInterface
         protected TaskBackendApiToTasksFacadeInterface $tasksFacade,
         protected TasksBackendApiAttributesMapperInterface $taskBackendApiAttributesMapper,
         protected GlueResponseTaskMapperInterface $responseMapper,
+        protected TasksBackendApiAttributesValidatorInterface $validator,
     ) {}
 
     public function createTask(
@@ -25,6 +27,11 @@ class TaskWriter implements TaskWriterInterface
     ): GlueResponseTransfer {
         if (!$this->isRequestUserProvided($glueRequestTransfer)) {
             return $this->responseMapper->createForbiddenResponse();
+        }
+
+        $errors = $this->validator->validateForCreation($taskBackendApiAttributesTransfer);
+        if ($errors->count()) {
+            return $this->responseMapper->mapValidationErrorsToGlueResponse($errors);
         }
 
         $taskTransfer = $this->taskBackendApiAttributesMapper->mapTasksBackendApiAttributesToTaskTransfer(
@@ -52,6 +59,11 @@ class TaskWriter implements TaskWriterInterface
             return $this->responseMapper->createForbiddenResponse();
         }
 
+        $errors = $this->validator->validateForUpdate($taskBackendApiAttributesTransfer);
+        if ($errors->count()) {
+            return $this->responseMapper->mapValidationErrorsToGlueResponse($errors);
+        }
+
         $getTaskByIdResponse = $this->tasksFacade->getTaskById(
             $glueRequestTransfer->getResource()->getId(),
         );
@@ -68,7 +80,6 @@ class TaskWriter implements TaskWriterInterface
             $getTaskByIdResponse->getTaskTransfer(),
             true
         );
-
 
         $taskResponseTransfer = $this->tasksFacade->updateTask(
             $taskTransfer

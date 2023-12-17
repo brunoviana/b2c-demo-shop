@@ -6,6 +6,7 @@ use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 use Generated\Shared\Transfer\TaskCollectionTransfer;
 use Generated\Shared\Transfer\TaskResponseTransfer;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 interface GlueResponseTaskMapperInterface
 {
@@ -32,4 +33,6 @@ interface GlueResponseTaskMapperInterface
     public function createGlueResponseTransfer(): GlueResponseTransfer;
 
     public function createForbiddenResponse(): GlueResponseTransfer;
+
+    public function mapValidationErrorsToGlueResponse(ConstraintViolationListInterface $errors): GlueResponseTransfer;
 }

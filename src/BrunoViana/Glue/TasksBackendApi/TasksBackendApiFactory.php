@@ -20,7 +20,11 @@ use BrunoViana\Glue\TasksBackendApi\Processor\Reader\TaskReader;
 use BrunoViana\Glue\TasksBackendApi\Processor\Reader\TaskReaderInterface;
 use BrunoViana\Glue\TasksBackendApi\Processor\Writer\TaskWriter;
 use BrunoViana\Glue\TasksBackendApi\Processor\Writer\TaskWriterInterface;
+use BrunoViana\Glue\TasksBackendApi\Validator\TasksBackendApiAttributesValidator;
+use BrunoViana\Glue\TasksBackendApi\Validator\TasksBackendApiAttributesValidatorInterface;
 use Spryker\Glue\Kernel\Backend\AbstractFactory;
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class TasksBackendApiFactory extends AbstractFactory
 {
@@ -39,6 +43,7 @@ class TasksBackendApiFactory extends AbstractFactory
             $this->getTasksFacade(),
             $this->createTaskBackendApiAttributesMapper(),
             $this->createGlueResponseTaskMapper(),
+            $this->createTasksBackendApiAttributesValidator(),
         );
     }
 
@@ -64,5 +69,17 @@ class TasksBackendApiFactory extends AbstractFactory
     public function getTasksFacade(): TaskBackendApiToTasksFacadeInterface
     {
         return $this->getProvidedDependency(TasksBackendApiDependencyProvider::FACADE_TASKS);
+    }
+
+    public function createTasksBackendApiAttributesValidator(): TasksBackendApiAttributesValidatorInterface
+    {
+        return new TasksBackendApiAttributesValidator(
+            $this->getValidator()
+        );
+    }
+
+    public function getValidator(): ValidatorInterface
+    {
+        return Validation::createValidator();
     }
 }
