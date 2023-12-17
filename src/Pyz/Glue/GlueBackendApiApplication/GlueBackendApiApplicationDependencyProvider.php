@@ -7,9 +7,7 @@
 
 namespace Pyz\Glue\GlueBackendApiApplication;
 
-use BrunoViana\Glue\TasksBackendApi\Plugin\GlueApplication\TasksBackendResourcePlugin;
-use BrunoViana\Glue\TasksBackendApi\Plugin\GlueApplication\TasksResourceResourcePlugin;
-use BrunoViana\Glue\TasksBackendApi\Plugin\GlueApplication\TasksRouteProviderPlugin;
+use BrunoViana\Glue\TasksBackendApi\Plugin\GlueBackendApiApplication\TasksBackendResourcePlugin;
 use Spryker\Glue\DynamicEntityBackendApi\Plugin\GlueApplication\DynamicEntityRouteProviderPlugin;
 use Spryker\Glue\EventDispatcher\Plugin\GlueBackendApiApplication\EventDispatcherApplicationPlugin;
 use Spryker\Glue\GlueBackendApiApplication\GlueBackendApiApplicationDependencyProvider as SprykerGlueBackendApiApplicationDependencyProvider;
@@ -116,8 +114,7 @@ class GlueBackendApiApplicationDependencyProvider extends SprykerGlueBackendApiA
             new PickingListStartPickingBackendResourcePlugin(),
             new PickingListItemsBackendResourcePlugin(),
             new WarehouseUserAssignmentsBackendResourcePlugin(),
-
-            new \BrunoViana\Glue\TasksBackendApi\Plugin\GlueBackendApiApplication\TasksBackendResourcePlugin(),
+            new TasksBackendResourcePlugin(),
         ];
     }
 
@@ -128,8 +125,6 @@ class GlueBackendApiApplicationDependencyProvider extends SprykerGlueBackendApiA
     {
         return [
             new DynamicEntityRouteProviderPlugin(),
-
-//            new TasksRouteProviderPlugin()
         ];
     }
 }
