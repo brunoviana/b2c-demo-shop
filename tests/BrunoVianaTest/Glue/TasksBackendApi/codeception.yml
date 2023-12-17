@@ -41,3 +41,4 @@ suites:
 ##                - \SprykerTest\Shared\Store\Helper\StoreDependencyHelper
 #                - \BrunoVianaTest\Zed\Tasks\Helper\TasksBusinessAssertionHelper
                 - \BrunoVianaTest\Shared\Tasks\Helper\TaskDataHelper
+                - \SprykerTest\Shared\User\Helper\UserDataHelper

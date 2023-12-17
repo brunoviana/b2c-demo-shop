@@ -19,6 +19,10 @@ class TaskReader implements TaskReaderInterface
     public function getTaskCollection(
         GlueRequestTransfer $glueRequestTransfer
     ): GlueResponseTransfer {
+        if (!$this->isRequestUserProvided($glueRequestTransfer)) {
+            return $this->responseMapper->createForbiddenResponse();
+        }
+
         $taskCriteriaTransfer = $this->createTaskCriteriaTransfer($glueRequestTransfer);
         $tasksCollectionTransfer = $this->tasksFacade->getTaskCollection($taskCriteriaTransfer);
 
@@ -31,6 +35,10 @@ class TaskReader implements TaskReaderInterface
     public function getTaskById(
         GlueRequestTransfer $glueRequestTransfer
     ): GlueResponseTransfer {
+        if (!$this->isRequestUserProvided($glueRequestTransfer)) {
+            return $this->responseMapper->createForbiddenResponse();
+        }
+
         $glueRequestTransfer->getResource()->requireId();
 
         $taskResponseTransfer = $this->tasksFacade->getTaskById(
@@ -59,5 +67,10 @@ class TaskReader implements TaskReaderInterface
             ->setPagination($glueRequestTransfer->getPagination())
             ->setSortCollection($glueRequestTransfer->getSortings())
             ->setTasksConditions($taskConditions);
+    }
+
+    protected function isRequestUserProvided(GlueRequestTransfer $glueRequestTransfer): bool
+    {
+        return $glueRequestTransfer->getRequestUser() && $glueRequestTransfer->getRequestUserOrFail()->getSurrogateIdentifier();
     }
 }

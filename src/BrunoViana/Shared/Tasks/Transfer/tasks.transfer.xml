@@ -8,13 +8,13 @@
         <property name="dueAt" type="string"/>
     </transfer>
 
-    <transfer name="TaskResponse">
+    <transfer name="TaskResponse" strict="true">
         <property name="taskTransfer" type="Task"/>
         <property name="isSuccessful" type="bool"/>
         <property name="errors" type="TaskError[]" singular="error"/>
     </transfer>
 
-    <transfer name="TaskError">
+    <transfer name="TaskError" strict="true">
         <property name="message" type="string"/>
     </transfer>
 

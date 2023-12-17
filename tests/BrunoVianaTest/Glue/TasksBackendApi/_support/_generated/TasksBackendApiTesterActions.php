@@ -1,4 +1,4 @@
-<?php  //[STAMP] 50ffa8edad27bfb58bf7ba5c96daf229
+<?php  //[STAMP] cdc368c19e85d8020517a36a01baa65b
 // phpcs:ignoreFile
 namespace BrunoVianaTest\Glue\TasksBackendApi\_generated;
 
@@ -1982,5 +1982,18 @@ trait TasksBackendApiTesterActions
      */
     public function ensureTasksTableIsEmpty(): void {
         $this->getScenario()->runStep(new \Codeception\Step\Action('ensureTasksTableIsEmpty', func_get_args()));
+    }
+
+ 
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     * @param array $override
+     *
+     * @return \Generated\Shared\Transfer\UserTransfer
+     * @see \SprykerTest\Shared\User\Helper\UserDataHelper::haveUser()
+     */
+    public function haveUser(array $override = []): \Generated\Shared\Transfer\UserTransfer {
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('haveUser', func_get_args()));
     }
 }

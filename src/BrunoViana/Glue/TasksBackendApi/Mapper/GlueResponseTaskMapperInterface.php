@@ -30,4 +30,6 @@ interface GlueResponseTaskMapperInterface
     ): GlueResponseTransfer;
 
     public function createGlueResponseTransfer(): GlueResponseTransfer;
+
+    public function createForbiddenResponse(): GlueResponseTransfer;
 }

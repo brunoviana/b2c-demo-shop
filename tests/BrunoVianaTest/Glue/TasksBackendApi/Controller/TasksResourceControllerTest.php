@@ -6,6 +6,7 @@ use BrunoViana\Glue\TasksBackendApi\Controller\TasksResourceController;
 use BrunoVianaTest\Glue\TasksBackendApi\TasksBackendApiTester;
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\GlueRequestTransfer;
+use Generated\Shared\Transfer\GlueRequestUserTransfer;
 use Generated\Shared\Transfer\GlueResourceTransfer;
 use Generated\Shared\Transfer\TasksBackendApiAttributesTransfer;
 
@@ -27,10 +28,14 @@ class TasksResourceControllerTest extends Unit
         $taskTransfer2 = $this->tester->haveTask();
         $taskTransfer3 = $this->tester->haveTask();
 
-        // Act
-        $glueResponseTransfer = (new TasksResourceController())->getCollectionAction(
-            new GlueRequestTransfer()
+        $adminUserTransfer = $this->tester->haveUser();
+
+        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
+            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
         );
+
+        // Act
+        $glueResponseTransfer = (new TasksResourceController())->getCollectionAction($glueRequestTransfer);
 
         // Assert
         $this->assertCount(0, $glueResponseTransfer->getErrors());
@@ -59,7 +64,11 @@ class TasksResourceControllerTest extends Unit
         $taskTransfer = $this->tester->haveTask();
         $this->tester->haveTask();
 
-        $glueRequestTransfer = (new GlueRequestTransfer())->setResource(
+        $adminUserTransfer = $this->tester->haveUser();
+
+        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
+            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
+        )->setResource(
             (new GlueResourceTransfer())->setId($taskTransfer->getIdTask()),
         );
 
@@ -81,7 +90,11 @@ class TasksResourceControllerTest extends Unit
         // Arrange
         $taskTranser = $this->tester->haveTask();
 
-        $glueRequestTransfer = (new GlueRequestTransfer())->setResource(
+        $adminUserTransfer = $this->tester->haveUser();
+
+        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
+            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
+        )->setResource(
             (new GlueResourceTransfer())->setId($taskTranser->getIdTask()),
         );
 
@@ -102,7 +115,11 @@ class TasksResourceControllerTest extends Unit
         $taskBackendApiAttribute = (new TasksBackendApiAttributesTransfer())->fromArray($taskTransfer->toArray());
         $taskBackendApiAttribute->setIdTask(null);
 
-        $glueRequestTransfer = (new GlueRequestTransfer())->setResource(
+        $adminUserTransfer = $this->tester->haveUser();
+
+        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
+            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
+        )->setResource(
             (new GlueResourceTransfer())->setId($taskTransfer->getIdTask()),
         );
 
@@ -129,7 +146,11 @@ class TasksResourceControllerTest extends Unit
 
         $taskBackendApiAttribute = (new TasksBackendApiAttributesTransfer())->fromArray($taskTransfer->toArray());
 
-        $glueRequestTransfer = (new GlueRequestTransfer())->setResource(
+        $adminUserTransfer = $this->tester->haveUser();
+
+        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
+            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
+        )->setResource(
             (new GlueResourceTransfer())->setId($taskTransfer->getIdTask()),
         );
 
@@ -153,7 +174,11 @@ class TasksResourceControllerTest extends Unit
 
         $taskBackendApiAttribute = (new TasksBackendApiAttributesTransfer())->fromArray($taskTransfer->toArray());
 
-        $glueRequestTransfer = (new GlueRequestTransfer())->setResource(
+        $adminUserTransfer = $this->tester->haveUser();
+
+        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
+            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
+        )->setResource(
             (new GlueResourceTransfer())->setId(-1),
         );
 
@@ -174,7 +199,11 @@ class TasksResourceControllerTest extends Unit
         // Arrange
         $taskTranser = $this->tester->haveTask();
 
-        $glueRequestTransfer = (new GlueRequestTransfer())->setResource(
+        $adminUserTransfer = $this->tester->haveUser();
+
+        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
+            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
+        )->setResource(
             (new GlueResourceTransfer())->setId($taskTranser->getIdTask()),
         );
 
@@ -191,7 +220,11 @@ class TasksResourceControllerTest extends Unit
     public function testDeleteActionReturnsGlueResponseWithNotFoundIfTaskDoesntExist(): void
     {
         // Arrange
-        $glueRequestTransfer = (new GlueRequestTransfer())->setResource(
+        $adminUserTransfer = $this->tester->haveUser();
+
+        $glueRequestTransfer = (new GlueRequestTransfer())->setRequestUser(
+            (new GlueRequestUserTransfer())->setSurrogateIdentifier($adminUserTransfer->getIdUserOrFail()),
+        )->setResource(
             (new GlueResourceTransfer())->setId(-1),
         );
 

@@ -23,6 +23,10 @@ class TaskWriter implements TaskWriterInterface
         TasksBackendApiAttributesTransfer $taskBackendApiAttributesTransfer,
         GlueRequestTransfer $glueRequestTransfer
     ): GlueResponseTransfer {
+        if (!$this->isRequestUserProvided($glueRequestTransfer)) {
+            return $this->responseMapper->createForbiddenResponse();
+        }
+
         $taskResponseTransfer = $this->tasksFacade->createTask(
             $this->taskBackendApiAttributesMapper->mapTasksBackendApiAttributesToTaskTransfer(
                 $taskBackendApiAttributesTransfer,
@@ -40,6 +44,10 @@ class TaskWriter implements TaskWriterInterface
         TasksBackendApiAttributesTransfer $taskBackendApiAttributesTransfer,
         GlueRequestTransfer $glueRequestTransfer
     ): GlueResponseTransfer {
+        if (!$this->isRequestUserProvided($glueRequestTransfer)) {
+            return $this->responseMapper->createForbiddenResponse();
+        }
+
         $getTaskByIdResponse = $this->tasksFacade->getTaskById(
             $glueRequestTransfer->getResource()->getId(),
         );
@@ -71,6 +79,10 @@ class TaskWriter implements TaskWriterInterface
     public function deleteTask(
         GlueRequestTransfer $glueRequestTransfer
     ): GlueResponseTransfer {
+        if (!$this->isRequestUserProvided($glueRequestTransfer)) {
+            return $this->responseMapper->createForbiddenResponse();
+        }
+
         $getTaskByIdResponse = $this->tasksFacade->getTaskById(
             $glueRequestTransfer->getResource()->getId(),
         );
@@ -90,5 +102,10 @@ class TaskWriter implements TaskWriterInterface
             $taskResponseTransfer,
             $glueRequestTransfer
         );
+    }
+
+    protected function isRequestUserProvided(GlueRequestTransfer $glueRequestTransfer): bool
+    {
+        return $glueRequestTransfer->getRequestUser() && $glueRequestTransfer->getRequestUserOrFail()->getSurrogateIdentifier();
     }
 }

@@ -104,6 +104,17 @@ class GlueResponseTaskMapper implements GlueResponseTaskMapperInterface
         return $glueResponseTransfer;
     }
 
+    public function createForbiddenResponse(): GlueResponseTransfer
+    {
+        return (new GlueResponseTransfer())
+            ->setHttpStatus(Response::HTTP_FORBIDDEN)
+            ->addError((new GlueErrorTransfer())
+                ->setMessage('Operation forbidden')
+                ->setStatus(Response::HTTP_FORBIDDEN)
+                ->setCode('5204')
+            );
+    }
+
     protected function createTasksBackendApiResource(
         TaskTransfer $taskTransfer,
     ): GlueResourceTransfer {
