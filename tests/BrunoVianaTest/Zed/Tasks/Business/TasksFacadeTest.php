@@ -23,19 +23,26 @@ class TasksFacadeTest extends Unit
         $this->tester->ensureTasksTableIsEmpty();
     }
 
-    public function testCreateTaskIsExecutedSuccessfully(): void
+    public function testCreateTaskShouldCreateNewTaskSuccessfully(): void
     {
         // Arrange
-        $taskTransfer = $this->tester->getTaskTransfer();
+        $taskTransfer = $this->tester->getTaskTransferWithUser();
 
         // Act
         $createTaskResponse = $this->tester->getFacade()->createTask($taskTransfer);
 
         // Assert
-        $this->tester->assertCreateTaskResponseIsCorrect($createTaskResponse);
+        $this->tester->assertTasksFacadeCreateTaskResponseHasRightDataForSuccessfullRequest(
+            $createTaskResponse
+        );
+
+        $this->tester->assertActualTaskIsSameAsExpectedTask(
+            $taskTransfer,
+            $createTaskResponse->getTaskTransfer()
+        );
     }
 
-    public function testCreateTaskMustHandleUnexpectedExceptionSuccessfully(): void
+    public function testCreateTaskShouldHandleUnexpectedExceptionIfTaskCreationFails(): void
     {
         // Arrange
         $taskTransfer = $this->tester->getTaskTransfer();
@@ -52,23 +59,34 @@ class TasksFacadeTest extends Unit
         );
     }
 
-    public function testUpdateTaskMustChangeTaskAttributesSuccessfully(): void
-    {
+    /**
+     * @return void
+     * @dataProvider taskAttributesForPatchProvider
+     */
+    public function testUpdateTaskShouldPatchExistentTaskSuccessfully(
+        array $attributeToChange
+    ): void{
         // Arrange
-        $taskTransfer = $this->tester->haveTask();
-        $taskTransfer->setTitle('changed-title');
-        $taskTransfer->setDescription('changed-title');
-        $taskTransfer->setStatus('in_progress');
-        $taskTransfer->setDueAt(date('Y-m-d H:i:s'));
+        $taskTransfer = $this->tester->haveTaskWithUser();
+
+        $taskTransfer->fromArray($attributeToChange);
 
         // Act
         $updateTaskResponse = $this->tester->getFacade()->updateTask($taskTransfer);
 
         // Assert
-        $this->tester->assertUpdateTaskResponseIsCorrect($updateTaskResponse, $taskTransfer);
+        $this->tester->assertTasksFacadeUpdateTaskResponseHasRightDataForSuccessfullRequest(
+            $updateTaskResponse,
+            $taskTransfer
+        );
+
+        $this->tester->assertActualTaskIsSameAsExpectedTask(
+            $taskTransfer,
+            $updateTaskResponse->getTaskTransfer()
+        );
     }
 
-    public function testUpdateTaskMustHandleUnexpectedExceptionSuccessfully(): void
+    public function testUpdateTaskShouldHandleUnexpectedExceptionIfTaskPatchingFails(): void
     {
         // Arrange
         $taskTransfer = $this->tester->getTaskTransfer();
@@ -76,22 +94,20 @@ class TasksFacadeTest extends Unit
         $this->tester->mockEntityManagerUpdateTaskWithException();
 
         // Act
-        $createTaskResponse = $this->tester->getFacade()->updateTask($taskTransfer);
+        $updateTaskResponse = $this->tester->getFacade()->updateTask($taskTransfer);
 
         // Assert
         $this->tester->assertTaskResponseReturnedError(
-            $createTaskResponse,
+            $updateTaskResponse,
             'An error occurred while updating the task',
         );
     }
 
-    public function testUpdateTaskMustHandleNotFoundTaskSuccessfully(): void
+    public function testUpdateTaskShouldReturnExceptionIfTaskIsNotFound(): void
     {
         // Arrange
-        $taskTransfer = $this->tester->haveTask();
-        $taskTransfer->setIdTask(
-            $taskTransfer->getIdTask() + 1
-        );
+        $taskTransfer = $this->tester->getTaskTransfer();
+        $taskTransfer->setIdTask(-1);
 
         // Act
         $updateTaskResponse = $this->tester->getFacade()->updateTask($taskTransfer);
@@ -103,34 +119,45 @@ class TasksFacadeTest extends Unit
         );
     }
 
-    public function testDeleteTaskMustRemoveTaskFromStorage(): void
+    public function testDeleteTaskShouldRemoveTaskFromStorageSuccessfully(): void
     {
         // Arrange
-        $taskTransfer = $this->tester->haveTask();
+        $taskTransfer = $this->tester->haveTaskWithUser();
 
         // Act
         $deleteTaskResponse = $this->tester->getFacade()->deleteTask($taskTransfer);
 
         // Assert
-        $this->tester->assertDeleteTaskResponseIsCorrect($deleteTaskResponse, $taskTransfer);
-        $this->tester->assertDeleteTaskRemovedTask($taskTransfer);
+        $this->tester->assertTasksFacadeDeleteTaskResponseHasRightDataForSuccessfullRequest(
+            $deleteTaskResponse,
+            $taskTransfer
+        );
+
+        $this->tester->assertTaskDontExistInStorage($taskTransfer);
     }
 
-    public function testGetTaskByIdReturnsTaskSuccessfully(): void
+    public function testGetTaskByIdShouldReturnExistentTaskByItsId(): void
     {
         // Arrange
-        $taskTransfer = $this->tester->haveTask();
+        $taskTransfer = $this->tester->haveTaskWithUser();
 
         // Act
-        $getTaskResponse = $this->tester->getFacade()->getTaskById(
+        $getTaskByIdResponse = $this->tester->getFacade()->getTaskById(
             $taskTransfer->getIdTask()
         );
 
         // Assert
-        $this->tester->assertGetTaskByIdResponseIsCorrect($getTaskResponse, $taskTransfer);
+        $this->tester->assertTasksFacadeGetTaskByIdResponseHasRightDataForSuccessfullRequest(
+            $getTaskByIdResponse,
+        );
+
+        $this->tester->assertActualTaskIsSameAsExpectedTask(
+            $taskTransfer,
+            $getTaskByIdResponse->getTaskTransfer()
+        );
     }
 
-    public function testGetTaskByIdMustHandleNotFoundTaskSuccessfully(): void
+    public function testGetTaskByIdShouldReturnExceptionIfTaskIsNotFound(): void
     {
         // Act
         $getTaskResponse = $this->tester->getFacade()->getTaskById(0);
@@ -142,10 +169,10 @@ class TasksFacadeTest extends Unit
         );
     }
 
-    public function testGetCollectionIsExecutedSuccessfully(): void
+    public function testGetTaskCollectionShouldReturnAllTaskIfNoCriteriaIsDefined(): void
     {
         // Arrange
-        $taskTransfer = $this->tester->haveTask();
+        $taskTransfer = $this->tester->haveTaskWithUser();
 
         $taskCriteriaTransfer = new TaskCriteriaTransfer();
 
@@ -155,20 +182,22 @@ class TasksFacadeTest extends Unit
         );
 
         // Assert
-        $this->assertCount(1, $taskCollectionTransfer->getTasks());
+        $this->tester->assertGetTaskCollectionResponseReturnedJustOneTask(
+            $taskCollectionTransfer
+        );
 
-        $this->tester->assertGetTaskCollectionResponseIsCorrect(
+        $this->tester->assertActualTaskIsSameAsExpectedTask(
             $taskTransfer,
             $taskCollectionTransfer->getTasks()->getIterator()->current(),
         );
     }
 
-    public function testGetCollectionFilterByTaskIdSuccessfully(): void
+    public function testGetTaskCollectionShouldReturnOneTaskFilteredById(): void
     {
         // Arrange
-        $this->tester->haveTask();
-        $this->tester->haveTask();
-        $taskTransfer = $this->tester->haveTask();
+        $this->tester->haveTaskWithUser();
+        $this->tester->haveTaskWithUser();
+        $taskTransfer = $this->tester->haveTaskWithUser();
 
         $taskConditions = new TaskConditionsTransfer();
         $taskConditions->addTaskId(
@@ -184,20 +213,22 @@ class TasksFacadeTest extends Unit
         );
 
         // Assert
-        $this->assertCount(1, $taskCollectionTransfer->getTasks());
+        $this->tester->assertGetTaskCollectionResponseReturnedJustOneTask(
+            $taskCollectionTransfer
+        );
 
-        $this->tester->assertGetTaskCollectionResponseIsCorrect(
+        $this->tester->assertActualTaskIsSameAsExpectedTask(
             $taskTransfer,
             $taskCollectionTransfer->getTasks()->getIterator()->current(),
         );
     }
 
-    public function testGetCollectionReturnTasksPaginatedSuccessfully(): void
+    public function testGetTaskCollectionShouldReturnPaginatedResultIfPaginationIsDefined(): void
     {
         // Arrange
-        $this->tester->haveTask();
-        $taskTransfer = $this->tester->haveTask();
-        $this->tester->haveTask();
+        $this->tester->haveTaskWithUser();
+        $taskTransfer = $this->tester->haveTaskWithUser();
+        $this->tester->haveTaskWithUser();
 
         $paginationTransfer = (new PaginationTransfer())
             ->setLimit(1)
@@ -212,20 +243,22 @@ class TasksFacadeTest extends Unit
         );
 
         // Assert
-        $this->assertCount(1, $taskCollectionTransfer->getTasks());
+        $this->tester->assertGetTaskCollectionResponseReturnedJustOneTask(
+            $taskCollectionTransfer
+        );
 
-        $this->tester->assertGetTaskCollectionResponseIsCorrect(
+        $this->tester->assertActualTaskIsSameAsExpectedTask(
             $taskTransfer,
             $taskCollectionTransfer->getTasks()->getIterator()->current(),
         );
     }
 
-    public function testGetCollectionReturnTasksSortedSuccessfully(): void
+    public function testGetTaskCollectionShouldReturnSortedResultIfSortIsDefined(): void
     {
         // Arrange
-        $taskTransfer3 = $this->tester->haveTask([TaskTransfer::TITLE => 'cccc']);
-        $taskTransfer2 = $this->tester->haveTask([TaskTransfer::TITLE => 'bbbb']);
-        $taskTransfer1 = $this->tester->haveTask([TaskTransfer::TITLE => 'aaaaa']);
+        $taskTransfer3 = $this->tester->haveTaskWithUser([TaskTransfer::TITLE => 'cccc']);
+        $taskTransfer2 = $this->tester->haveTaskWithUser([TaskTransfer::TITLE => 'bbbb']);
+        $taskTransfer1 = $this->tester->haveTaskWithUser([TaskTransfer::TITLE => 'aaaaa']);
 
         $sortTransfer = (new SortTransfer())
             ->setField(TaskTransfer::TITLE)
@@ -240,19 +273,29 @@ class TasksFacadeTest extends Unit
         );
 
         // Assert
-        $this->tester->assertGetTaskCollectionResponseIsCorrect(
+        $this->tester->assertActualTaskIsSameAsExpectedTask(
             $taskTransfer1,
             $taskCollectionTransfer->getTasks()->getIterator()->offsetGet(0),
         );
 
-        $this->tester->assertGetTaskCollectionResponseIsCorrect(
+        $this->tester->assertActualTaskIsSameAsExpectedTask(
             $taskTransfer2,
             $taskCollectionTransfer->getTasks()->getIterator()->offsetGet(1),
         );
 
-        $this->tester->assertGetTaskCollectionResponseIsCorrect(
+        $this->tester->assertActualTaskIsSameAsExpectedTask(
             $taskTransfer3,
             $taskCollectionTransfer->getTasks()->getIterator()->offsetGet(2),
         );
+    }
+
+    public function taskAttributesForPatchProvider()
+    {
+        return [
+            [[ TaskTransfer::TITLE => 'changed-title' ]],
+            [[ TaskTransfer::DESCRIPTION => 'changed-description' ]],
+            [[ TaskTransfer::STATUS => 'in_progress' ]],
+            [[ TaskTransfer::DUE_AT => date('Y-m-d H:i:s') ]],
+        ];
     }
 }

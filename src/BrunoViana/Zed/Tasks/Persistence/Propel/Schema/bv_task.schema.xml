@@ -7,12 +7,15 @@
         <column name="description" required="false" type="LONGVARCHAR"/>
         <column name="status" required="true" size="11" type="ENUM" valueSet="to_do,in_progress,completed" defaultValue="to_do"/>
         <column name="due_at" required="false" type="TIMESTAMP"/>
-<!--        <unique name="spy_user-username">-->
-<!--            <unique-column name="username"/>-->
-<!--        </unique>-->
+        <column name="id_assignee" required="true" type="INTEGER"/>
+
         <behavior name="timestampable"/>
-<!--        <behavior name="archivable"/>-->
-<!--        <id-method-parameter value="spy_user_pk_seq"/>-->
+
+        <foreign-key foreignTable="spy_user" phpName="User">
+            <reference local="id_assignee" foreign="id_user"/>
+        </foreign-key>
+
+        <id-method-parameter value="bv_task_pk_seq"/>
     </table>
 
 </database>

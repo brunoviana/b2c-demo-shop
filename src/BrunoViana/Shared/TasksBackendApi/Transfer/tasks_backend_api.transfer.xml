@@ -8,8 +8,6 @@
         <property name="dueAt" type="string"/>
     </transfer>
 
-    <transfer name="Task" strict="true" />
-
     <transfer name="TaskCollection" strict="true">
         <property name="tasks" type="Task[]" singular="task"/>
         <property name="pagination" type="Pagination"/>
@@ -27,11 +25,9 @@
 
     <transfer name="Task" strict="true" />
 
-    <transfer name="Pagination">
-    </transfer>
+    <transfer name="Pagination" />
 
-    <transfer name="Sort">
-    </transfer>
+    <transfer name="Sort" />
 
 </transfers>
 

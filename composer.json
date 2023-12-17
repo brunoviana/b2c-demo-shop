@@ -256,7 +256,9 @@
             "Orm\\": "src/Orm/",
             "Pyz\\": "src/Pyz/",
             "BrunoViana\\": "src/BrunoViana/",
-            "BrunoVianaTest\\Shared\\Tasks\\Helper\\": "tests/BrunoVianaTest/Shared/Tasks/_support/Helper/",
+            "BrunoVianaTest\\Shared\\Tasks\\": "tests/BrunoVianaTest/Shared/Tasks/_support/",
+            "BrunoVianaTest\\Zed\\Tasks\\": "tests/BrunoVianaTest/Zed/Tasks/_support/",
+            "BrunoVianaTest\\Glue\\TasksBackendApi\\": "tests/BrunoVianaTest/Glue/TasksBackendApi/_support/",
             "Install\\": "src/Install/",
             "SprykerConfig\\": "src/SprykerConfig/"
         }
@@ -318,6 +320,12 @@
         "phpstan-setup": "vendor/bin/console dev:ide-auto-completion:generate",
         "prefer-mid": [
             "COMPOSER_MEMORY_LIMIT=-1 composer require twig/twig:\"^2.9.0\""
+        ],
+        "bv:tests:build": [
+            "vendor/bin/codecept build -c codeception.brunoviana.yml"
+        ],
+        "bv:tests:tasks": [
+            "vendor/bin/codecept run -c tests/BrunoVianaTest/Zed/Tasks/"
         ],
         "bv:tests:all": [
             "vendor/bin/codecept build -c codeception.brunoviana.yml",

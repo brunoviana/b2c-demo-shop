@@ -16,7 +16,7 @@ suites:
         actor: TasksBusinessTester
         modules:
             enabled:
-#                - Asserts
+                - Asserts
                 - \SprykerTest\Shared\Testify\Helper\Environment
                 - \SprykerTest\Shared\Testify\Helper\ConfigHelper
                 - \SprykerTest\Shared\Testify\Helper\LocatorHelper:
@@ -40,4 +40,4 @@ suites:
 #                - \SprykerTest\Zed\MerchantProfile\Helper\MerchantProfileHelper
 #                - \SprykerTest\Shared\Store\Helper\StoreDependencyHelper
                 - \BrunoVianaTest\Shared\Tasks\Helper\TaskDataHelper
-                - \BrunoVianaTest\Zed\Tasks\Helper\TasksBusinessAssertionHelper
+                - \SprykerTest\Shared\User\Helper\UserDataHelper

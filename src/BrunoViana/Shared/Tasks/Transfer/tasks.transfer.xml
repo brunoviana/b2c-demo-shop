@@ -6,6 +6,11 @@
         <property name="description" type="string"/>
         <property name="status" type="string"/>
         <property name="dueAt" type="string"/>
+        <property name="idAssignee" type="int"/>
+    </transfer>
+
+    <transfer name="User">
+        <property name="idUser" type="int"/>
     </transfer>
 
     <transfer name="TaskResponse" strict="true">
@@ -33,11 +38,7 @@
         <property name="taskIds" type="int[]" singular="taskId"/>
     </transfer>
 
-    <transfer name="Task" strict="true" />
+    <transfer name="Pagination" />
 
-    <transfer name="Pagination">
-    </transfer>
-
-    <transfer name="Sort">
-    </transfer>
+    <transfer name="Sort" />
 </transfers>
