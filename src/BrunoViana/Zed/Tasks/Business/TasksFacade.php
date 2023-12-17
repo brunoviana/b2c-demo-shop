@@ -2,6 +2,7 @@
 
 namespace BrunoViana\Zed\Tasks\Business;
 
+use Generated\Shared\Transfer\SendOverdueEmailsResponseTransfer;
 use Generated\Shared\Transfer\TaskCollectionTransfer;
 use Generated\Shared\Transfer\TaskCriteriaTransfer;
 use Generated\Shared\Transfer\TaskResponseTransfer;
@@ -40,5 +41,10 @@ class TasksFacade extends AbstractFacade implements TasksFacadeInterface
     public function getTaskCollection(TaskCriteriaTransfer $taskCriteriaTransfer): TaskCollectionTransfer
     {
         return $this->getRepository()->getTaskCollection($taskCriteriaTransfer);
+    }
+
+    public function sendOverdueEmails(): SendOverdueEmailsResponseTransfer
+    {
+        return $this->getFactory()->createOverdueEmailSender()->sendEmailForTasksDueYesterday();
     }
 }

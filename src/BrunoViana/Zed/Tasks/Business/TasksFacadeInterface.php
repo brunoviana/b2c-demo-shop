@@ -2,6 +2,7 @@
 
 namespace BrunoViana\Zed\Tasks\Business;
 
+use Generated\Shared\Transfer\SendOverdueEmailsResponseTransfer;
 use Generated\Shared\Transfer\TaskCollectionTransfer;
 use Generated\Shared\Transfer\TaskCriteriaTransfer;
 use Generated\Shared\Transfer\TaskResponseTransfer;
@@ -18,4 +19,6 @@ interface TasksFacadeInterface
     public function getTaskById(int $taskId): TaskResponseTransfer;
 
     public function getTaskCollection(TaskCriteriaTransfer $taskCriteriaTransfer): TaskCollectionTransfer;
+
+    public function sendOverdueEmails(): SendOverdueEmailsResponseTransfer;
 }

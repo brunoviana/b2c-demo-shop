@@ -109,8 +109,8 @@ class TasksBusinessTester extends \Codeception\Actor
         );
 
         $this->assertEquals(
-            new \DateTime($expectedTask->getDueAt()),
-            new \DateTime($actualTask->getDueAt()),
+            $expectedTask->getDueAt(),
+            $actualTask->getDueAt(),
             'Actual task must have the same due date as expected task'
         );
 

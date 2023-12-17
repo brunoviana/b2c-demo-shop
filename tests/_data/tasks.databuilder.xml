@@ -9,7 +9,7 @@
         <property name="title" dataBuilderRule="unique()->sentence(1)"/>
         <property name="description" dataBuilderRule="sentence(10)"/>
         <property name="status" dataBuilderRule="=to_do"/>
-        <property name="dueAt" dataBuilderRule="dateTimeInInterval('+1 day', '+30 days')->format('Y-m-d H:i:s')"/>
+        <property name="dueAt" dataBuilderRule="dateTimeInInterval('+1 day', '+30 days')->format('Y-m-d')"/>
     </transfer>
 
 </transfers>

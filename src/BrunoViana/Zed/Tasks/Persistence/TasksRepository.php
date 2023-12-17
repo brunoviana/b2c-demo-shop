@@ -128,6 +128,10 @@ class TasksRepository extends AbstractRepository implements TasksRepositoryInter
             $taskQuery->filterByIdTask_In($taskConditionsTransfer->getTaskIds());
         }
 
+        if ($taskConditionsTransfer->getDueAt()) {
+            $taskQuery->filterByDueAt($taskConditionsTransfer->getDueAt());
+        }
+
         return $taskQuery;
     }
 }

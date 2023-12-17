@@ -13,6 +13,13 @@ use Spryker\Shared\Config\Config;
 use Spryker\Shared\MessageBroker\MessageBrokerConstants;
 
 $jobs[] = [
+    'name' => 'notify-overdue-tasks',
+    'command' => '$PHP_BIN vendor/bin/console tasks:notify-overdue',
+    'schedule' => '0 6 * * *',
+    'enable' => true,
+];
+
+$jobs[] = [
     'name' => 'check-product-validity',
     'command' => '$PHP_BIN vendor/bin/console product:check-validity',
     'schedule' => '0 6 * * *',

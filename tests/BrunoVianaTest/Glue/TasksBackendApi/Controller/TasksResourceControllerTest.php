@@ -317,7 +317,7 @@ class TasksResourceControllerTest extends Unit
             [[ TaskTransfer::TITLE => 'changed-title' ]],
             [[ TaskTransfer::DESCRIPTION => 'changed-description' ]],
             [[ TaskTransfer::STATUS => 'in_progress' ]],
-            [[ TaskTransfer::DUE_AT => date('Y-m-d H:i:s') ]],
+            [[ TaskTransfer::DUE_AT => date('Y-m-d') ]],
         ];
     }
 }

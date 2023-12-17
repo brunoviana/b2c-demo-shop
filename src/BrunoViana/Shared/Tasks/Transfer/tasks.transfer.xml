@@ -19,6 +19,10 @@
         <property name="errors" type="TaskError[]" singular="error"/>
     </transfer>
 
+    <transfer name="SendOverdueEmailsResponse" strict="true">
+        <property name="count" type="int"/>
+    </transfer>
+
     <transfer name="TaskError" strict="true">
         <property name="message" type="string"/>
     </transfer>
@@ -36,6 +40,11 @@
 
     <transfer name="TaskConditions" strict="true">
         <property name="taskIds" type="int[]" singular="taskId"/>
+        <property name="dueAt" type="string" />
+    </transfer>
+
+    <transfer name="Mail">
+        <property name="task" type="Task"/>
     </transfer>
 
     <transfer name="Pagination" />

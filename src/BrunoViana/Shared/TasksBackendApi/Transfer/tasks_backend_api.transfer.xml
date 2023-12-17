@@ -21,6 +21,7 @@
 
     <transfer name="TaskConditions" strict="true">
         <property name="taskIds" type="int[]" singular="taskId"/>
+        <property name="dueAt" type="string" />
     </transfer>
 
     <transfer name="Task" strict="true" />

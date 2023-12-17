@@ -11,7 +11,7 @@ use Generated\Shared\Transfer\TaskTransfer;
 use BrunoVianaTest\Zed\Tasks\TasksBusinessTester;
 use Spryker\Shared\Kernel\Transfer\Exception\RequiredTransferPropertyException;
 
-class TasksFacadeTest extends Unit
+class TasksFacadeCrudTest extends Unit
 {
 
     protected TasksBusinessTester $tester;
@@ -295,7 +295,7 @@ class TasksFacadeTest extends Unit
             [[ TaskTransfer::TITLE => 'changed-title' ]],
             [[ TaskTransfer::DESCRIPTION => 'changed-description' ]],
             [[ TaskTransfer::STATUS => 'in_progress' ]],
-            [[ TaskTransfer::DUE_AT => date('Y-m-d H:i:s') ]],
+            [[ TaskTransfer::DUE_AT => date('Y-m-d') ]],
         ];
     }
 }

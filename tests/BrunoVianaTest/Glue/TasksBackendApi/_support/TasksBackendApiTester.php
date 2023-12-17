@@ -214,8 +214,8 @@ class TasksBackendApiTester extends \Codeception\Actor
         );
 
         $this->assertEquals(
-            new \DateTime($expectedTaskTransfer->getDueAt()),
-            new \DateTime($actualTaskTransfer->getDueAt()),
+            $expectedTaskTransfer->getDueAt(),
+            $actualTaskTransfer->getDueAt(),
             'Returned task due date not equals the expected value'
         );
     }
