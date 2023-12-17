@@ -14,6 +14,11 @@ class TasksEntityManager extends AbstractEntityManager implements TasksEntityMan
 {
     public function createTask(TaskTransfer $taskTransfer): TaskTransfer
     {
+        $taskTransfer->requireTitle()
+            ->requireStatus()
+            ->requireDueAt()
+            ->requireIdAssignee();
+
         $taskMapper = $this->getFactory()->createTaskMapper();
 
         $taskEntity = $taskMapper->mapTaskTransferToTaskEntity(
