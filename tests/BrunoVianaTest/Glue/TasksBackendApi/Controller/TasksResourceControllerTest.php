@@ -220,7 +220,95 @@ class TasksResourceControllerTest extends Unit
         );
     }
 
-    // validate user
+    public function testGetCollectionShouldReturnForbiddenIfUserNotLogged(): void
+    {
+        // Arrange
+        $glueRequestTransfer = $this->tester->createGlueRequestTransferWithoutUser();
+
+        // Act
+        $glueResponseTransfer = (new TasksResourceController())->getCollectionAction($glueRequestTransfer);
+
+        // Assert
+        $this->tester->assertGlueResponseHasForbiddenData($glueResponseTransfer);
+    }
+
+    public function testGetActionShouldReturnForbiddenIfUserNotLogged(): void
+    {
+        // Arrange
+        $adminUserTransfer = $this->tester->haveUser();
+        $taskTransfer = $this->tester->haveTaskWithUser($adminUserTransfer);
+
+        $glueRequestTransfer = $this->tester->createGlueRequestTransferWithoutUser();
+        $glueRequestTransfer = $this->tester->addGlueResourceWithTaskIdToGlueRequest($glueRequestTransfer, $taskTransfer);
+
+        // Act
+        $glueResponseTransfer = (new TasksResourceController())->getAction($glueRequestTransfer);
+
+        // Assert
+        $this->tester->assertGlueResponseHasForbiddenData($glueResponseTransfer);
+    }
+
+    public function testPostActionShouldReturnForbiddenIfUserNotLogged(): void
+    {
+        // Arrange
+        $adminUserTransfer = $this->tester->haveUser();
+        $taskTransfer = $this->tester->createTaskTransferWithUser($adminUserTransfer);
+
+        $taskBackendApiAttribute = $this->tester->createTasksBackendApiAttributesTransferFromTaskTransfer($taskTransfer);
+        $taskBackendApiAttribute->setIdTask(null);
+
+        $glueRequestTransfer = $this->tester->createGlueRequestTransferWithoutUser();
+        $glueRequestTransfer = $this->tester->addGlueResourceWithTaskIdToGlueRequest($glueRequestTransfer, $taskTransfer);
+
+        // Act
+        $glueResponseTransfer = (new TasksResourceController())->postAction(
+            $taskBackendApiAttribute,
+            $glueRequestTransfer
+        );
+
+        // Assert
+        $this->tester->assertGlueResponseHasForbiddenData($glueResponseTransfer);
+    }
+
+    public function testPatchActionShouldReturnForbiddenIfUserNotLogged(): void
+    {
+        // Arrange
+        $adminUserTransfer = $this->tester->haveUser();
+        $taskTransfer = $this->tester->haveTaskWithUser($adminUserTransfer);
+
+        $taskTransfer->setTitle('changed title');
+
+        $taskBackendApiAttribute = $this->tester->createTasksBackendApiAttributesTransferFromTaskTransfer($taskTransfer);
+
+        $glueRequestTransfer = $this->tester->createGlueRequestTransferWithoutUser();
+        $glueRequestTransfer = $this->tester->addGlueResourceWithTaskIdToGlueRequest($glueRequestTransfer, $taskTransfer);
+
+        // Act
+        $glueResponseTransfer = (new TasksResourceController())->patchAction(
+            $taskBackendApiAttribute,
+            $glueRequestTransfer
+        );
+
+        // Assert
+        $this->tester->assertGlueResponseHasForbiddenData($glueResponseTransfer);
+    }
+
+    public function testDeleteActionShouldReturnForbiddenIfUserNotLogged(): void
+    {
+        // Arrange
+        $adminUserTransfer = $this->tester->haveUser();
+        $taskTransfer = $this->tester->haveTaskWithUser($adminUserTransfer);
+
+        $glueRequestTransfer = $this->tester->createGlueRequestTransferWithoutUser();
+        $glueRequestTransfer = $this->tester->addGlueResourceWithTaskIdToGlueRequest($glueRequestTransfer, $taskTransfer);
+
+        // Act
+        $glueResponseTransfer = (new TasksResourceController())->deleteAction($glueRequestTransfer);
+
+        // Assert
+        $this->tester->assertGlueResponseHasForbiddenData($glueResponseTransfer);
+    }
+
     // validate user permission
 
     public function taskAttributesForPatchProvider()

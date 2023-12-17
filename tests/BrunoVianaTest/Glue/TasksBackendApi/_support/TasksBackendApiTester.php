@@ -85,6 +85,11 @@ class TasksBackendApiTester extends \Codeception\Actor
         );
     }
 
+    public function createGlueRequestTransferWithoutUser(): GlueRequestTransfer
+    {
+        return (new GlueRequestTransfer());
+    }
+
     public function addGlueResourceWithTaskIdToGlueRequest(
         GlueRequestTransfer $glueRequestTransfer,
         TaskTransfer $taskTransfer,
@@ -168,6 +173,17 @@ class TasksBackendApiTester extends \Codeception\Actor
         $this->assertEquals('Task not found.', $taskError->getMessage());
     }
 
+    public function assertGlueResponseHasForbiddenData(
+        GlueResponseTransfer $glueResponseTransfer,
+    ): void {
+        $taskError = $glueResponseTransfer->getErrors()->getIterator()->current();
+
+        $this->assertCount(1, $glueResponseTransfer->getErrors());
+        $this->assertCount(0, $glueResponseTransfer->getResources());
+        $this->assertEquals(403, $glueResponseTransfer->getHttpStatus());
+        $this->assertEquals('Operation forbidden', $taskError->getMessage());
+    }
+
     public function assertDeleteActionReturnedGlueResponseWithSuccessfullData(
         GlueResponseTransfer $glueResponseTransfer,
     ): void {
@@ -203,23 +219,4 @@ class TasksBackendApiTester extends \Codeception\Actor
             'Returned task due date not equals the expected value'
         );
     }
-
-//    protected function assertTaskResourceControllerReturnedGlueResponseProperly(
-//        GlueResponseTransfer $glueResponseTransfer,
-//        TaskTransfer $expectedTaskTransfer,
-//    ): void {
-//        $this->assertCount(0, $glueResponseTransfer->getErrors());
-//        $this->assertCount(1, $glueResponseTransfer->getResources());
-//
-//        $taskResource = $glueResponseTransfer->getResources()->getIterator()->current();
-//        $tasksBackendApiAttributesTransfer = $taskResource->getAttributesOrFail();
-//
-//        $this->assertNotNull($taskResource->getId());
-//        $this->assertNotNull($taskResource->getAttributes());
-//
-//        $this->assertTaskTransfersAreTheSame(
-//            $expectedTaskTransfer,
-//            $tasksBackendApiAttributesTransfer
-//        );
-//    }
 }
