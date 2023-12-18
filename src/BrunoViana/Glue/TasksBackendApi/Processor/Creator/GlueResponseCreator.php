@@ -153,6 +153,9 @@ class GlueResponseCreator implements GlueResponseCreatorInterface
             ->setMessage($message);
     }
 
+    /**
+     * @return array<string, string>
+     */
     protected function getResponseHeaders(): array
     {
         return [

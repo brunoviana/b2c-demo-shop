@@ -17,4 +17,8 @@ interface TaskWriterInterface
         TasksBackendApiAttributesTransfer $taskBackendApiAttributesTransfer,
         GlueRequestTransfer $glueRequestTransfer
     ): GlueResponseTransfer;
+
+    public function deleteTask(
+        GlueRequestTransfer $glueRequestTransfer
+    ): GlueResponseTransfer;
 }

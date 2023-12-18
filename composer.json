@@ -321,6 +321,7 @@
         "prefer-mid": [
             "COMPOSER_MEMORY_LIMIT=-1 composer require twig/twig:\"^2.9.0\""
         ],
+        "bv:phpstan": "php -d memory_limit=1024M vendor/bin/phpstan analyze -c phpstan.neon src/BrunoViana -l 6",
         "bv:tests:build": "vendor/bin/codecept build -c codeception.brunoviana.yml",
         "bv:tests:tasks": "vendor/bin/codecept run -c tests/BrunoVianaTest/Zed/Tasks/",
         "bv:tests:tasks-backend-api": "vendor/bin/codecept run -c tests/BrunoVianaTest/Glue/TasksBackendApi/",

@@ -8,4 +8,6 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 interface TasksBackendApiAttributesValidatorInterface
 {
     public function validateForCreation(TasksBackendApiAttributesTransfer $backendApiAttributesTransfer): ConstraintViolationListInterface;
+
+    public function validateForUpdate(TasksBackendApiAttributesTransfer $backendApiAttributesTransfer): ConstraintViolationListInterface;
 }
