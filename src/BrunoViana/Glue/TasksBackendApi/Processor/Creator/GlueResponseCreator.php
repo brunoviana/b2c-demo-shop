@@ -1,7 +1,8 @@
 <?php
 
-namespace BrunoViana\Glue\TasksBackendApi\Mapper;
+namespace BrunoViana\Glue\TasksBackendApi\Processor\Creator;
 
+use BrunoViana\Glue\TasksBackendApi\Mapper\TasksBackendApiAttributesMapperInterface;
 use Generated\Shared\Transfer\GlueErrorTransfer;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResourceTransfer;
@@ -13,19 +14,20 @@ use Generated\Shared\Transfer\TaskTransfer;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-class GlueResponseTaskMapper implements GlueResponseTaskMapperInterface
+class GlueResponseCreator implements GlueResponseCreatorInterface
 {
     protected const RESPONSE_CODE_ENTITY_DOES_NOT_EXIST = 1303;
 
     protected const HEADER_CONTENT_TYPE = 'Content-Type';
 
     protected const CONTENT_TYPE_APP_JSON = 'application/json';
+    public const TYPE_TASKS = 'tasks';
 
     public function __construct(
         protected TasksBackendApiAttributesMapperInterface $tasksBackendApiAttributesMapper,
     ) {}
 
-    public function mapTaskResponseCollectionToGlueResponseTransfer(
+    public function createFromTaskCollectionTransfer(
         TaskCollectionTransfer $taskCollectionTransfer,
         GlueRequestTransfer    $glueRequestTransfer,
     ): GlueResponseTransfer {
@@ -46,14 +48,14 @@ class GlueResponseTaskMapper implements GlueResponseTaskMapperInterface
         return $glueResponseTransfer;
     }
 
-    public function mapTaskResponseTransferToGlueResponseTransfer(
+    public function createFromTaskResponseTransfer(
         TaskResponseTransfer $taskResponseTransfer,
         GlueRequestTransfer $glueRequestTransfer,
     ): GlueResponseTransfer {
         $glueResponseTransfer = $this->createGlueResponseTransfer();
 
         if ($taskResponseTransfer->getErrors()->count()) {
-            return $this->mapTaskResponseTransferWithErrorToGlueResponse(
+            return $this->createTaskResponseTransferWithError(
                 $taskResponseTransfer,
                 $glueResponseTransfer
             );
@@ -68,12 +70,12 @@ class GlueResponseTaskMapper implements GlueResponseTaskMapperInterface
         return $glueResponseTransfer;
     }
 
-    public function mapTaskResponseTransferWithErrorToGlueResponse(
+    public function createTaskResponseTransferWithError(
         TaskResponseTransfer $taskResponseTransfer,
         GlueResponseTransfer $glueResponseTransfer,
     ): GlueResponseTransfer {
         foreach ($taskResponseTransfer->getErrors() as $errorTransfer) {
-            $glueResponseTransfer = $this->mapErrorToResponseTransfer(
+            $glueResponseTransfer = $this->createWithErrorMessage(
                 $glueResponseTransfer,
                 $errorTransfer->getMessageOrFail(),
             );
@@ -82,14 +84,11 @@ class GlueResponseTaskMapper implements GlueResponseTaskMapperInterface
         return $glueResponseTransfer;
     }
 
-    public function mapErrorToResponseTransfer(
+    public function createWithErrorMessage(
         GlueResponseTransfer $glueResponseTransfer,
         string $message,
     ): GlueResponseTransfer {
         $glueResponseTransfer->setHttpStatus(Response::HTTP_NOT_FOUND);
-
-        // @TODO translate error messages
-        // @TODO response proper errors and status code for other kind of fails
         $glueResponseTransfer->addError(
             $this->createGlueErrorTransfer($message)
         );
@@ -116,7 +115,7 @@ class GlueResponseTaskMapper implements GlueResponseTaskMapperInterface
             );
     }
 
-    public function mapValidationErrorsToGlueResponse(ConstraintViolationListInterface $errors): GlueResponseTransfer
+    public function createFromValidationErrors(ConstraintViolationListInterface $errors): GlueResponseTransfer
     {
         $glueResponseTransfer = (new GlueResponseTransfer())
             ->setHttpStatus(Response::HTTP_BAD_REQUEST);
@@ -142,7 +141,7 @@ class GlueResponseTaskMapper implements GlueResponseTaskMapperInterface
 
         return (new GlueResourceTransfer())
             ->setId($taskTransfer->getIdTask())
-            ->setType('tasks') // @TODO use constant
+            ->setType(self::TYPE_TASKS)
             ->setAttributes($tasksBackendApiAttributesTransfer);
     }
 

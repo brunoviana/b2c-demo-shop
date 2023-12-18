@@ -23,7 +23,6 @@ class TaskWriter implements TaskWriterInterface
             return (new TaskResponseTransfer())->setTaskTransfer($taskTransfer)
                 ->setIsSuccessful(true);
         } catch (\Exception $exception) {
-            // @TODO log exception
             return (new TaskResponseTransfer())->setIsSuccessful(false)
                                                 ->addError(
                                                     (new TaskErrorTransfer())->setMessage(
@@ -51,7 +50,6 @@ class TaskWriter implements TaskWriterInterface
             return (new TaskResponseTransfer())->setTaskTransfer($taskTransfer)
                 ->setIsSuccessful(true);
         } catch (\Exception $exception) {
-            // @TODO log exception
             return (new TaskResponseTransfer())->setIsSuccessful(false)
                 ->addError(
                     (new TaskErrorTransfer())->setMessage(

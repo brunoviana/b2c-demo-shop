@@ -2,6 +2,7 @@
 
 namespace BrunoViana\Glue\TasksBackendApi\Validator;
 
+use BrunoViana\Shared\Tasks\Transfer\TasksConstants;
 use Generated\Shared\Transfer\TasksBackendApiAttributesTransfer;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Collection;
@@ -57,7 +58,11 @@ class TasksBackendApiAttributesValidator implements TasksBackendApiAttributesVal
             ],
             'status' => [
                 new Optional([
-                    new Choice(['to_do','in_progress','completed']) // @TODO create constant
+                    new Choice([
+                        TasksConstants::STATUS_TODO,
+                        TasksConstants::STATUS_IN_PROGRESS,
+                        TasksConstants::STATUS_COMPLETED
+                    ])
                 ]),
             ],
             'due_at' => [
@@ -83,7 +88,11 @@ class TasksBackendApiAttributesValidator implements TasksBackendApiAttributesVal
             ],
             'status' => [
                 new NotBlank(),
-                new Choice(['to_do','in_progress','completed']) // @TODO create constant
+                new Choice([
+                    TasksConstants::STATUS_TODO,
+                    TasksConstants::STATUS_IN_PROGRESS,
+                    TasksConstants::STATUS_COMPLETED
+                ]),
             ],
             'due_at' => [
                 new Optional([

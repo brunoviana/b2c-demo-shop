@@ -3,7 +3,7 @@
 namespace BrunoViana\Glue\TasksBackendApi\Processor\Reader;
 
 use BrunoViana\Glue\TasksBackendApi\Dependency\Facade\TaskBackendApiToTasksFacadeInterface;
-use BrunoViana\Glue\TasksBackendApi\Mapper\GlueResponseTaskMapperInterface;
+use BrunoViana\Glue\TasksBackendApi\Processor\Creator\GlueResponseCreatorInterface;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 use Generated\Shared\Transfer\TaskConditionsTransfer;
@@ -13,20 +13,20 @@ class TaskReader implements TaskReaderInterface
 {
     public function __construct(
         protected TaskBackendApiToTasksFacadeInterface $tasksFacade,
-        protected GlueResponseTaskMapperInterface $responseMapper,
+        protected GlueResponseCreatorInterface         $responseCreator,
     ) {}
 
     public function getTaskCollection(
         GlueRequestTransfer $glueRequestTransfer
     ): GlueResponseTransfer {
         if (!$this->isRequestUserProvided($glueRequestTransfer)) {
-            return $this->responseMapper->createForbiddenResponse();
+            return $this->responseCreator->createForbiddenResponse();
         }
 
         $taskCriteriaTransfer = $this->createTaskCriteriaTransfer($glueRequestTransfer);
         $tasksCollectionTransfer = $this->tasksFacade->getTaskCollection($taskCriteriaTransfer);
 
-        return $this->responseMapper->mapTaskResponseCollectionToGlueResponseTransfer(
+        return $this->responseCreator->createFromTaskCollectionTransfer(
             $tasksCollectionTransfer,
             $glueRequestTransfer
         );
@@ -36,7 +36,7 @@ class TaskReader implements TaskReaderInterface
         GlueRequestTransfer $glueRequestTransfer
     ): GlueResponseTransfer {
         if (!$this->isRequestUserProvided($glueRequestTransfer)) {
-            return $this->responseMapper->createForbiddenResponse();
+            return $this->responseCreator->createForbiddenResponse();
         }
 
         $glueRequestTransfer->getResource()->requireId();
@@ -45,7 +45,7 @@ class TaskReader implements TaskReaderInterface
             $glueRequestTransfer->getResource()->getId(),
         );
 
-        return $this->responseMapper->mapTaskResponseTransferToGlueResponseTransfer(
+        return $this->responseCreator->createFromTaskResponseTransfer(
             $taskResponseTransfer,
             $glueRequestTransfer
         );

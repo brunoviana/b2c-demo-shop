@@ -8,12 +8,12 @@
 namespace BrunoViana\Glue\TasksBackendApi;
 
 use BrunoViana\Glue\TasksBackendApi\Dependency\Facade\TaskBackendApiToTasksFacadeInterface;
-use BrunoViana\Glue\TasksBackendApi\Mapper\GlueRequestTaskMapper;
-use BrunoViana\Glue\TasksBackendApi\Mapper\GlueRequestTaskMapperInterface;
-use BrunoViana\Glue\TasksBackendApi\Mapper\GlueResponseTaskMapper;
-use BrunoViana\Glue\TasksBackendApi\Mapper\GlueResponseTaskMapperInterface;
 use BrunoViana\Glue\TasksBackendApi\Mapper\TasksBackendApiAttributesMapper;
 use BrunoViana\Glue\TasksBackendApi\Mapper\TasksBackendApiAttributesMapperInterface;
+use BrunoViana\Glue\TasksBackendApi\Processor\Creator\GlueRequestCreator;
+use BrunoViana\Glue\TasksBackendApi\Processor\Creator\GlueRequestTaskMapperInterface;
+use BrunoViana\Glue\TasksBackendApi\Processor\Creator\GlueResponseCreator;
+use BrunoViana\Glue\TasksBackendApi\Processor\Creator\GlueResponseCreatorInterface;
 use BrunoViana\Glue\TasksBackendApi\Processor\Mapper\TaskMapper;
 use BrunoViana\Glue\TasksBackendApi\Processor\Mapper\TaskMapperInterface;
 use BrunoViana\Glue\TasksBackendApi\Processor\Reader\TaskReader;
@@ -33,7 +33,7 @@ class TasksBackendApiFactory extends AbstractFactory
     {
         return new TaskReader(
             $this->getTasksFacade(),
-            $this->createGlueResponseTaskMapper(),
+            $this->createGlueResponseCreator(),
         );
     }
 
@@ -42,21 +42,14 @@ class TasksBackendApiFactory extends AbstractFactory
         return new TaskWriter(
             $this->getTasksFacade(),
             $this->createTaskBackendApiAttributesMapper(),
-            $this->createGlueResponseTaskMapper(),
+            $this->createGlueResponseCreator(),
             $this->createTasksBackendApiAttributesValidator(),
         );
     }
 
-    public function createGlueResponseTaskMapper(): GlueResponseTaskMapperInterface
+    public function createGlueResponseCreator(): GlueResponseCreatorInterface
     {
-        return new GlueResponseTaskMapper(
-            $this->createTaskBackendApiAttributesMapper(),
-        );
-    }
-
-    public function createGlueRequestTaskMapper(): GlueRequestTaskMapperInterface
-    {
-        return new GlueRequestTaskMapper(
+        return new GlueResponseCreator(
             $this->createTaskBackendApiAttributesMapper(),
         );
     }
